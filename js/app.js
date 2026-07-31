@@ -281,6 +281,7 @@
           U.el("div", { class: "vrow__emoji", text: w.img }),
           U.el("div", { class: "vrow__text" }, [
             U.el("div", { class: "vrow__sv", text: w.sv }),
+            U.el("div", { class: "ipa", text: "[" + w.ipa + "]" }),
             U.el("div", { class: "vrow__en", text: w.t })
           ]),
           play
@@ -315,7 +316,11 @@
         play.addEventListener("click", function () { A.play(id); });
         body.appendChild(U.el("div", { class: "vrow" }, [
           U.el("div", { class: "vrow__emoji", text: w.img }),
-          U.el("div", { class: "vrow__text" }, [U.el("div", { class: "vrow__sv", text: w.sv }), U.el("div", { class: "vrow__en", text: w.t })]),
+          U.el("div", { class: "vrow__text" }, [
+            U.el("div", { class: "vrow__sv", text: w.sv }),
+            U.el("div", { class: "ipa", text: "[" + w.ipa + "]" }),
+            U.el("div", { class: "vrow__en", text: w.t })
+          ]),
           play
         ]));
       });

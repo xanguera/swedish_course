@@ -44,13 +44,13 @@
     return interp(s, vars);
   };
 
-  /* Merged vocab view for the current L1: {id, sv, img, tags, t, note}. */
+  /* Merged vocab view for the current L1: {id, sv, ipa, img, tags, t, note}. */
   I.word = function (id) {
     var w = LSV.data.vocab[id];
     if (!w) return null;
     var c = I.content[I.L1], o = c && c.vocab && c.vocab[id];
     return {
-      id: id, sv: w.sv, img: w.img, tags: w.tags,
+      id: id, sv: w.sv, ipa: w.ipa, img: w.img, tags: w.tags,
       t: (o && o.t != null) ? o.t : w.en,
       note: (o && o.note != null) ? o.note : (w.note || "")
     };
