@@ -132,6 +132,9 @@ Calibrate to the trip and the learners, but the reference "standard" scope is a 
   glance, an optional one-line `note` (a pronunciation tip or usage note — the "why/how"), and tags.
 - Choose emoji that are unambiguous; for abstract words/phrases pick a gesture or symbol (👋 hej, 🙏 tack,
   ❓ question, 🧭 directions). Numbers use the numeral as the "emoji".
+- Don't repeat the numeral in the translation text (e.g. `en: "one"`, not `"one (1)"`) — the `img` field
+  already carries it, and echoing it in `en`/L1 text just leaks the answer into `mc_word_en`, flashcards,
+  and `match_pairs`.
 
 ### 6.2 Exercises (the 7 engines)
 Author a lesson's `exercises` as a mixed list. Types (see `js/exercises.js`):
@@ -178,6 +181,8 @@ when it must pad from the global pool. Tag accordingly.
 - **Localize examples** to the learner (e.g. change the sample country in "I come from…").
 - Keep short L2 interjections used for encouragement (e.g. Swedish "Bra!") **untranslated** for
   immersion — these are UI praise strings, intentionally left in the L2.
+- Same rule as §6.1 for numbers: don't append the numeral to the translated word (`t("um")`, not
+  `t("um (1)")`) — it's redundant with `img` and leaks the answer into exercises.
 
 ---
 
