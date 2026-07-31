@@ -133,7 +133,7 @@
     var onboarded = I18N.isOnboarded();
 
     var head = U.el("div", { class: "setup-head" }, [
-      U.el("h1", { text: I18N.t("setup_title") })
+      U.el("h1", { text: onboarded ? I18N.t("settings_title") : I18N.t("setup_title") })
     ]);
     if (onboarded) {
       var x = U.el("button", { class: "setup-close", text: "✕", "aria-label": I18N.t("setup_close") });
@@ -186,6 +186,22 @@
     groups.push(U.el("div", { class: "onboard__footer" }, [confirm]));
 
     var scr = U.el("div", { class: "onboard fadein" }, groups);
+
+    if (onboarded) {
+      var resetBtn = U.el("button", { class: "btn btn--red btn--sm", text: I18N.t("settings_reset_btn") });
+      resetBtn.addEventListener("click", function () {
+        if (!window.confirm(I18N.t("settings_reset_confirm"))) return;
+        P.reset();
+        toast(I18N.t("settings_reset_done"));
+        location.hash = "#/";
+      });
+      scr.appendChild(U.el("div", { class: "setup-danger" }, [
+        U.el("div", { class: "setup-danger__label", text: I18N.t("settings_reset_title") }),
+        U.el("div", { class: "setup-danger__desc", text: I18N.t("settings_reset_desc") }),
+        resetBtn
+      ]));
+    }
+
     U.clear(view).appendChild(scr);
     window.scrollTo(0, 0);
   }

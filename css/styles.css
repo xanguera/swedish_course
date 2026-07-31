@@ -78,8 +78,7 @@ button { font-family: inherit; cursor: pointer; }
   z-index: 30;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   padding: 12px 16px calc(12px + env(safe-area-inset-top, 0px));
   padding-top: max(12px, env(safe-area-inset-top, 0px));
   background: var(--bg);
@@ -89,12 +88,25 @@ button { font-family: inherit; cursor: pointer; }
   display: flex; align-items: center; gap: 8px;
   background: none; border: 0; padding: 0; color: var(--ink);
   font-weight: 900; font-size: 20px;
+  flex-shrink: 0;
 }
 .topbar__moose { font-size: 26px; }
 .topbar__title { color: var(--green); letter-spacing: .3px; }
+@media (max-width: 380px) {
+  .topbar__title { display: none; }
+}
 
-.topbar__stats { display: flex; gap: 14px; }
-.stat { display: flex; align-items: center; gap: 5px; font-weight: 800; font-size: 17px; }
+/* Scrolls internally (instead of pushing the settings button off-screen)
+   if the stat values ever get wide — the settings button lives outside
+   this container so it always stays fully on-screen and clickable. */
+.topbar__stats {
+  display: flex; align-items: center; gap: 10px;
+  flex: 1 1 auto; min-width: 0;
+  overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
+  margin: 0 -2px; padding: 0 2px;
+}
+.topbar__stats::-webkit-scrollbar { display: none; }
+.stat { display: flex; align-items: center; gap: 5px; font-weight: 800; font-size: 17px; flex-shrink: 0; }
 .stat__icon { font-size: 20px; line-height: 1; }
 .stat--streak .stat__val { color: var(--orange); }
 .stat--xp .stat__val { color: var(--gold-dark); }
@@ -521,11 +533,13 @@ button { font-family: inherit; cursor: pointer; }
 
 .legal { font-size:12px; color: var(--locked-ink); text-align:center; padding: 20px; font-weight:700; }
 
-/* language switch button (topbar) */
+/* settings button (topbar) — lives outside .topbar__stats so it always
+   stays full-size & on-screen (see .topbar__stats above). */
 .lang-btn {
-  border: 2px solid var(--line); background: #fff; border-radius: 12px;
+  flex-shrink: 0;
+  border: 2px solid var(--blue); background: #fff; border-radius: 12px;
   width: 40px; height: 34px; font-size: 18px; line-height: 1; padding: 0;
-  display: grid; place-items: center; box-shadow: 0 2px 0 var(--line);
+  display: grid; place-items: center; box-shadow: 0 2px 0 var(--blue);
 }
 .lang-btn:active { transform: translateY(2px); box-shadow: none; }
 
@@ -562,6 +576,13 @@ button { font-family: inherit; cursor: pointer; }
 .lang-option__meta { flex:1; text-align:left; }
 .lang-option__sub { display:block; font-size:12px; color: var(--ink-soft); font-weight:700; }
 .lang-option__check { color: var(--blue); font-weight: 900; }
+
+.setup-danger {
+  width: 100%; max-width: 400px; margin: 22px 0 4px; padding: 14px;
+  border: 2px solid #ffd2d2; border-radius: var(--radius); background: #fff6f6;
+}
+.setup-danger__label { font-weight: 800; color: var(--red-dark); font-size: 14px; text-transform: uppercase; letter-spacing:.6px; margin-bottom: 6px; }
+.setup-danger__desc { color: var(--ink-soft); font-weight: 700; font-size: 14px; margin-bottom: 12px; }
 
 @media (min-width: 481px) {
   .app { min-height: 100vh; }

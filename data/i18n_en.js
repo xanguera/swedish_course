@@ -68,6 +68,14 @@
     setup_btn: "Start learning",
     setup_close: "Close",
 
+    // settings (setup screen, reopened after onboarding)
+    settings_title: "Settings",
+    settings_reset_title: "Danger zone",
+    settings_reset_desc: "Erase all your lessons, XP, streak and saved words. This can't be undone.",
+    settings_reset_btn: "Reset all progress",
+    settings_reset_confirm: "Reset all progress? This deletes your lessons, XP, streak and saved words for good.",
+    settings_reset_done: "Progress reset",
+
     // offline
     offline_title: "Offline",
     offline_ready: "Everything is downloaded — the course works fully offline. 🎉",
