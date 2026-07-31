@@ -36,6 +36,7 @@
 
     culture_title: "Visste du? 🇸🇪", culture_sub: "Sabias que? — tradições suecas e factos sobre Estocolmo",
     phrase_title: "Livro de frases 📖", phrase_sub: "Todas as palavras e frases — toca em 🔊 para ouvir. Ótimo para levar contigo!",
+    phrase_empty: "Termina uma lição para desbloqueares as suas palavras aqui.",
     practice_title: "Praticar 🔁",
     practice_empty: "Aprende primeiro algumas lições e depois volta aqui para rever as palavras que já viste.",
     practice_go: "Ir para as lições",

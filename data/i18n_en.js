@@ -44,6 +44,7 @@
     // culture / phrasebook / practice
     culture_title: "Visste du? 🇸🇪", culture_sub: "Did you know? — Swedish traditions & Stockholm facts",
     phrase_title: "Phrasebook 📖", phrase_sub: "Every word & phrase — tap 🔊 to hear it. Great to use on the go!",
+    phrase_empty: "Complete a lesson to unlock its words here.",
     practice_title: "Practice 🔁",
     practice_empty: "Learn a few lessons first, then come back here to review the words you've met.",
     practice_go: "Go to lessons",

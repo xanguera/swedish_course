@@ -319,11 +319,15 @@
     root.appendChild(U.el("div", { class: "section-title", text: I18N.t("phrase_title") }));
     root.appendChild(U.el("div", { class: "section-sub", text: I18N.t("phrase_sub") }));
 
+    var anyLearned = false;
     D.course.units.forEach(function (unit) {
       var ids = [];
       unit.modules.forEach(function (m) { m.lessons.forEach(function (lid) {
+        if (!P.isComplete(lid)) return;
         var l = D.lessons[lid]; if (l) l.teach.forEach(function (id) { if (ids.indexOf(id) < 0) ids.push(id); });
       }); });
+      if (!ids.length) return;
+      anyLearned = true;
       root.appendChild(U.el("div", { class: "section-title", text: unit.icon + " " + I18N.unitTitle(unit.id) }));
       ids.forEach(function (id) {
         var w = I18N.word(id); if (!w) return;
@@ -340,6 +344,9 @@
         ]));
       });
     });
+    if (!anyLearned) {
+      root.appendChild(U.el("div", { class: "empty" }, [moose("mascot"), U.el("p", { text: I18N.t("phrase_empty") })]));
+    }
     mount(root);
   }
 
