@@ -56,7 +56,14 @@
     setup_l2: "Quero aprender",
     setup_l2_note: "Mais idiomas em breve",
     setup_btn: "Começar a aprender",
-    setup_close: "Fechar"
+    setup_close: "Fechar",
+
+    settings_title: "Definições",
+    settings_reset_title: "Zona de perigo",
+    settings_reset_desc: "Apaga todas as tuas lições, XP, sequência e palavras guardadas. Não é possível desfazer.",
+    settings_reset_btn: "Repor todo o progresso",
+    settings_reset_confirm: "Repor todo o progresso? Isto apaga para sempre as tuas lições, XP, sequência e palavras guardadas.",
+    settings_reset_done: "Progresso reposto"
   });
 
   var t = function (t, note) { return { t: t, note: note || "" }; };
