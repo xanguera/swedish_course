@@ -24,10 +24,11 @@ python3 -m http.server 8000
 |------|---------|
 | App shell | `index.html` |
 | Look & feel | `css/styles.css` |
-| Engine | `js/util.js`, `js/i18n.js`, `js/audio.js`, `js/progress.js`, `js/exercises.js`, `js/app.js` |
+| Engine | `js/util.js`, `js/i18n.js`, `js/audio.js`, `js/progress.js`, `js/exercises.js`, `js/offline.js`, `js/app.js` |
 | **Course content (Swedish + structure)** | `data/vocab.js`, `data/lessons.js`, `data/course.js`, `data/culture.js` |
 | **Language packs (per mother tongue)** | `data/i18n_en.js` (English = source), `data/i18n_pt.js` (Português) |
 | Audio | `assets/audio/sv/<id>.mp3` (optional) · `assets/audio/manifest.json` |
+| Offline / PWA | `manifest.json`, `sw.js`, `assets/icons/` |
 | Helper scripts | `scripts/build_manifest.js`, `scripts/generate_audio.sh`, `scripts/verify_content.js` |
 
 ## 🌍 Languages (L1 → L2)
@@ -92,6 +93,18 @@ bash scripts/generate_audio.sh --force  # regenerate everything
 ```
 
 Any other TTS works too — just produce `<id>.mp3` (or `<id>.wav`) files; the site plays both.
+
+## 📴 Offline use (PWA)
+
+A service worker (`sw.js`) precaches the whole app shell on first visit, so the site keeps working
+without a connection after that (handy on the plane or with no data in Stockholm). It also has a
+web app manifest (`manifest.json` + `assets/icons/`), so it can be **added to the home screen** as
+a standalone app.
+
+Audio clips are cached automatically as they're played, but to make sure **every** clip is available
+before you lose signal, open **Settings** (flag button in the top bar) and tap **Download for
+offline** — it fetches and caches all clips from `assets/audio/manifest.json` with a progress
+indicator. Requires HTTPS (or `localhost`); service workers don't run over `file://`.
 
 ## ✍️ Adding or editing content
 

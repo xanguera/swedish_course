@@ -66,6 +66,16 @@
     setup_l2: "I want to learn",
     setup_l2_note: "More languages coming soon",
     setup_btn: "Start learning",
-    setup_close: "Close"
+    setup_close: "Close",
+
+    // offline
+    offline_title: "Offline",
+    offline_ready: "Everything is downloaded — the course works fully offline. 🎉",
+    offline_not_ready: "The app itself already works offline. Download the audio too, so every word plays without a connection — handy on the plane or with no data in Stockholm.",
+    offline_btn: "Download for offline",
+    offline_progress: "Downloading… {done}/{total}",
+    offline_done: "Downloaded! Available offline now.",
+    offline_error: "Couldn't download right now — check your connection and try again.",
+    offline_unsupported: "Offline download isn't available in this browser."
   });
 })();
