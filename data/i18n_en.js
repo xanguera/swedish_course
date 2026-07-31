@@ -74,6 +74,16 @@
     settings_reset_desc: "Erase all your lessons, XP, streak and saved words. This can't be undone.",
     settings_reset_btn: "Reset all progress",
     settings_reset_confirm: "Reset all progress? This deletes your lessons, XP, streak and saved words for good.",
-    settings_reset_done: "Progress reset"
+    settings_reset_done: "Progress reset",
+
+    // offline
+    offline_title: "Offline",
+    offline_ready: "Everything is downloaded — the course works fully offline. 🎉",
+    offline_not_ready: "The app itself already works offline. Download the audio too, so every word plays without a connection — handy on the plane or with no data in Stockholm.",
+    offline_btn: "Download for offline",
+    offline_progress: "Downloading… {done}/{total}",
+    offline_done: "Downloaded! Available offline now.",
+    offline_error: "Couldn't download right now — check your connection and try again.",
+    offline_unsupported: "Offline download isn't available in this browser."
   });
 })();

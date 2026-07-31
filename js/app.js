@@ -3,6 +3,8 @@
   "use strict";
   var U = LSV.util, A = LSV.audio, P = LSV.progress, EX = LSV.exercises, D = LSV.data, I18N = LSV.i18n;
 
+  LSV.offline.register();
+
   var view = U.qs("#view");
   var topbar = U.qs("#topbar");
   var tabbar = U.qs("#tabbar");
@@ -91,6 +93,39 @@
     window.scrollTo(0, 0);
   }
 
+  /* -------- Offline download (Settings) -------- */
+  function viewOfflineGroup() {
+    var group = U.el("div", { class: "setup-group" }, [
+      U.el("div", { class: "setup-group__label", text: I18N.t("offline_title") })
+    ]);
+    var ready = LSV.offline.isReady();
+    var status = U.el("div", { class: "muted", text: I18N.t(ready ? "offline_ready" : "offline_not_ready") });
+    group.appendChild(status);
+
+    if (!LSV.offline.supported()) {
+      group.appendChild(U.el("div", { class: "muted", text: I18N.t("offline_unsupported") }));
+      return group;
+    }
+
+    var btn = U.el("button", { class: "btn btn--blue btn--sm btn--auto", text: I18N.t("offline_btn") });
+    if (ready) btn.hidden = true;
+    btn.addEventListener("click", function () {
+      btn.disabled = true;
+      status.textContent = I18N.t("offline_progress", { done: 0, total: "…" });
+      LSV.offline.download(function (done, total) {
+        status.textContent = I18N.t("offline_progress", { done: done, total: total });
+      }).then(function () {
+        status.textContent = I18N.t("offline_done");
+        btn.hidden = true;
+      }).catch(function () {
+        status.textContent = I18N.t("offline_error");
+        btn.disabled = false;
+      });
+    });
+    group.appendChild(btn);
+    return group;
+  }
+
   function viewSetup() {
     chrome(false);
     var chosenL1 = I18N.L1 || "en";
@@ -146,10 +181,11 @@
       else location.hash = "#/";
     });
 
-    var scr = U.el("div", { class: "onboard fadein" }, [
-      head, l1group, l2group,
-      U.el("div", { class: "onboard__footer" }, [confirm])
-    ]);
+    var groups = [head, l1group, l2group];
+    if (onboarded) groups.push(viewOfflineGroup());
+    groups.push(U.el("div", { class: "onboard__footer" }, [confirm]));
+
+    var scr = U.el("div", { class: "onboard fadein" }, groups);
 
     if (onboarded) {
       var resetBtn = U.el("button", { class: "btn btn--red btn--sm", text: I18N.t("settings_reset_btn") });

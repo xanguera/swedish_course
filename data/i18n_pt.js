@@ -63,7 +63,17 @@
     settings_reset_desc: "Apaga todas as tuas lições, XP, sequência e palavras guardadas. Não é possível desfazer.",
     settings_reset_btn: "Repor todo o progresso",
     settings_reset_confirm: "Repor todo o progresso? Isto apaga para sempre as tuas lições, XP, sequência e palavras guardadas.",
-    settings_reset_done: "Progresso reposto"
+    settings_reset_done: "Progresso reposto",
+
+    // offline
+    offline_title: "Offline",
+    offline_ready: "Já está tudo descarregado — o curso funciona totalmente offline. 🎉",
+    offline_not_ready: "A aplicação já funciona offline. Descarrega também o áudio, para todas as palavras tocarem sem ligação — ótimo para o avião ou sem dados em Estocolmo.",
+    offline_btn: "Descarregar para usar offline",
+    offline_progress: "A descarregar… {done}/{total}",
+    offline_done: "Descarregado! Já está disponível offline.",
+    offline_error: "Não foi possível descarregar agora — verifica a ligação e tenta de novo.",
+    offline_unsupported: "O download offline não está disponível neste navegador."
   });
 
   var t = function (t, note) { return { t: t, note: note || "" }; };
