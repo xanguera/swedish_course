@@ -25,7 +25,7 @@
         case "match_pairs":
           steps.push({ kind: "match", items: ex.items, graded: true }); break;
         case "fill_blank":
-          steps.push({ kind: "fill", sv: ex.sv, hintEn: ex.en, lessonId: lesson.id, answer: ex.answer, bank: ex.bank, graded: true }); break;
+          steps.push({ kind: "fill", sv: ex.sv, hintEn: ex.en, ipa: ex.ipa, lessonId: lesson.id, answer: ex.answer, bank: ex.bank, graded: true }); break;
         case "listen_repeat":
           steps.push({ kind: "repeat", items: ex.items, graded: false }); break;
       }
@@ -46,6 +46,10 @@
     }
     var distractors = U.sample(pool, 3);
     return U.shuffle([target].concat(distractors));
+  }
+
+  function ipaEl(ipa, extraClass) {
+    return U.el("div", { class: "ipa" + (extraClass ? " " + extraClass : ""), text: "[" + ipa + "]" });
   }
 
   function speaker(id, big) {
@@ -74,6 +78,7 @@
       stage.appendChild(U.el("div", { class: "bigword" }, [
         U.el("span", { class: "bigword__sv", text: target.sv }), speaker(target.id)
       ]));
+      stage.appendChild(ipaEl(target.ipa));
     } else { /* listen */
       stage.appendChild(speaker(target.id, true));
       stage.appendChild(U.el("div", { class: "flashcard__hint", text: I18N.t("q_listen_hint") }));
@@ -88,6 +93,7 @@
       var kids = [];
       if (step.mode !== "sv2en") kids.push(U.el("div", { class: "choice__emoji", text: w.img }));
       kids.push(U.el("span", { text: label }));
+      if (step.mode !== "sv2en") kids.push(ipaEl(w.ipa, "ipa--sm"));
       var btn = U.el("button", { class: "choice", type: "button" }, kids);
       btn.addEventListener("click", function () {
         if (checked) return;
@@ -117,7 +123,7 @@
         if (!correct) LSV.progress.touchSrs(target.id, false);
         else LSV.progress.touchSrs(target.id, true);
         var tr = I18N.tr(target.id);
-        var ans = step.mode === "sv2en" ? tr : (target.sv + " — " + tr);
+        var ans = step.mode === "sv2en" ? tr : (target.sv + " [" + target.ipa + "] — " + tr);
         return { correct: !!correct, answer: ans, vocabId: target.id };
       }
     };
@@ -138,7 +144,9 @@
 
     function makeTile(item) {
       var text = item.side === "sv" ? item.w.sv : item.w.en;
-      var kids = item.side === "sv" ? [U.el("span", { text: item.w.img + " " }), U.el("span", { text: item.w.sv })]
+      var kids = item.side === "sv" ? [U.el("span", { text: item.w.img + " " }), U.el("div", { class: "match-tile__word" }, [
+                    U.el("span", { text: item.w.sv }), ipaEl(item.w.ipa, "ipa--sm")
+                  ])]
                                     : [U.el("span", { text: I18N.tr(item.w.id) })];
       var t = U.el("button", { class: "match-tile", type: "button" }, kids);
       t._item = item;
@@ -222,7 +230,9 @@
         var correct = filled === step.answer;
         blank.style.color = correct ? "#4c8a02" : "#e63f3f";
         if (correct) A.say(step.sv.replace("___", step.answer));
-        return { correct: correct, answer: step.sv.replace("___", step.answer) + " — " + hint };
+        var full = step.sv.replace("___", step.answer);
+        var ipaPart = step.ipa ? " [" + step.ipa + "]" : "";
+        return { correct: correct, answer: full + ipaPart + " — " + hint };
       }
     };
   }
@@ -262,7 +272,9 @@
       U.clear(front); U.clear(back);
       var tw = I18N.word(w.id);
       front.appendChild(U.el("div", { class: "flashcard__emoji", text: w.img }));
-      front.appendChild(U.el("div", { class: "flashcard__sv", text: w.sv }));
+      front.appendChild(U.el("div", { class: "flashcard__word" }, [
+        U.el("div", { class: "flashcard__sv", text: w.sv }), ipaEl(w.ipa)
+      ]));
       front.appendChild(speaker(w.id, true));
       front.appendChild(U.el("div", { class: "flashcard__hint", text: I18N.t("fc_hint") }));
       back.appendChild(U.el("div", { class: "flashcard__en", text: tw.t }));
@@ -293,10 +305,12 @@
     var stage = U.el("div", { class: "ex__stage" });
     var emoji = U.el("div", { class: "ex__image ex__image--sm" });
     var sv = U.el("div", { class: "bigword__sv" });
+    var ipa = U.el("div", { class: "ipa" });
     var en = U.el("div", { class: "flashcard__en" });
     var sp = speaker(ids[0], true);
     stage.appendChild(emoji);
     stage.appendChild(U.el("div", { class: "bigword" }, [sv, sp]));
+    stage.appendChild(ipa);
     stage.appendChild(en);
     host.appendChild(stage);
 
@@ -308,7 +322,7 @@
 
     function paint() {
       var w = U.v(ids[i]);
-      emoji.textContent = w.img; sv.textContent = w.sv; en.textContent = I18N.tr(w.id);
+      emoji.textContent = w.img; sv.textContent = w.sv; ipa.textContent = "[" + w.ipa + "]"; en.textContent = I18N.tr(w.id);
       var nsp = speaker(w.id, true); sp.replaceWith(nsp); sp = nsp;
       U.clear(dots);
       ids.forEach(function (_, k) { dots.appendChild(U.el("span", { class: "dot" + (k === i ? " is-on" : "") })); });

@@ -357,6 +357,12 @@ button { font-family: inherit; cursor: pointer; }
   margin: 8px 0;
 }
 .bigword__sv { font-size: 30px; font-weight: 900; }
+.ipa {
+  font-size: 15px; font-weight: 600; color: var(--ink-soft);
+  font-family: "Charis SIL", "Doulos SIL", "Segoe UI", "Noto Sans", "DejaVu Sans", Arial, sans-serif;
+  font-style: italic;
+}
+.ipa--sm { font-size: 11px; margin-top: 1px; }
 .speaker {
   border:0; background: var(--blue); color:#fff; border-radius: 14px;
   width: 52px; height: 52px; font-size: 22px; display:grid; place-items:center;
@@ -393,6 +399,7 @@ button { font-family: inherit; cursor: pointer; }
   min-height: 56px; display:flex; align-items:center; justify-content:center; gap:6px;
   text-align:center;
 }
+.match-tile__word { display:flex; flex-direction:column; align-items:center; line-height:1.2; }
 .match-tile.is-selected { border-color: var(--blue); background:#ddf4ff; color: var(--blue-dark); }
 .match-tile.is-cleared  { visibility: hidden; }
 .match-tile.is-bad { animation: shake .3s; border-color: var(--red); }
@@ -436,6 +443,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .flashcard__face--back { transform: rotateY(180deg); background: #f0fbff; }
 .flashcard__emoji { font-size: 84px; }
+.flashcard__word { display:flex; flex-direction:column; align-items:center; gap:4px; }
 .flashcard__sv { font-size: 30px; font-weight:900; }
 .flashcard__en { font-size: 22px; font-weight:800; color: var(--ink-soft); }
 .flashcard__hint { font-size: 13px; color: var(--ink-soft); font-weight:700; }
