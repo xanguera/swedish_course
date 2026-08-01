@@ -10,21 +10,22 @@
    To add a new L2 (target) later: registerTarget(code, meta) + a parallel course. */
 (function () {
   "use strict";
-  var SKEY = "lsv:settings";
 
   var I = {
     L1: "en", L2: "sv", onboarded: false,
     langs: {}, targets: {}, ui: {}, content: {}, _course: null
   };
 
-  function loadSettings() {
-    try {
-      var s = JSON.parse(localStorage.getItem(SKEY) || "null");
-      if (s) { I.L1 = s.l1 || "en"; I.L2 = s.l2 || "sv"; I.onboarded = !!s.onboarded; }
-    } catch (e) { /* no storage (e.g. node) */ }
+  /* Language pair now lives on the active profile (see profiles.js) —
+     re-read it whenever the active profile changes. */
+  function syncFromActiveProfile() {
+    var p = LSV.profiles.active();
+    if (p) { I.L1 = p.l1 || "en"; I.L2 = p.l2 || "sv"; I.onboarded = true; }
+    else { I.L1 = "en"; I.L2 = "sv"; I.onboarded = false; }
   }
-  function saveSettings() {
-    try { localStorage.setItem(SKEY, JSON.stringify({ l1: I.L1, l2: I.L2, onboarded: !!I.onboarded })); } catch (e) {}
+  function persistActive() {
+    var id = LSV.profiles.activeId();
+    if (id) LSV.profiles.update(id, { l1: I.L1, l2: I.L2 });
   }
   function interp(s, vars) {
     if (!vars) return s;
@@ -101,14 +102,29 @@
   };
 
   /* settings */
-  I.setL1 = function (code) { if (I.langs[code]) { I.L1 = code; saveSettings(); } };
-  I.setL2 = function (code) { if (I.targets[code]) { I.L2 = code; saveSettings(); } };
-  I.completeOnboarding = function (l1, l2) { I.L1 = l1 || "en"; I.L2 = l2 || "sv"; I.onboarded = true; saveSettings(); };
-  I.isOnboarded = function () { return !!I.onboarded; };
+  I.setL1 = function (code) { if (I.langs[code]) { I.L1 = code; persistActive(); } };
+  I.setL2 = function (code) { if (I.targets[code]) { I.L2 = code; persistActive(); } };
+
+  /* First-time setup, or adding a new family member's profile: creates a
+     profile (named + language pair) and makes it the active one. */
+  I.completeOnboarding = function (name, l1, l2) {
+    LSV.profiles.create(name, l1 || "en", l2 || "sv");
+    syncFromActiveProfile();
+  };
+  I.isOnboarded = function () { return LSV.profiles.hasAny(); };
+
+  /* Switch which family member's profile is active; reloads L1/L2 (and
+     the caller is responsible for reloading progress — see LSV.progress.reload). */
+  I.switchProfile = function (id) {
+    if (!LSV.profiles.switchTo(id)) return false;
+    syncFromActiveProfile();
+    return true;
+  };
+
   I.langList = function () { return Object.keys(I.langs).map(function (k) { return I.langs[k]; }); };
   I.targetList = function () { return Object.keys(I.targets).map(function (k) { return I.targets[k]; }); };
   I.currentFlag = function () { return (I.langs[I.L1] && I.langs[I.L1].flag) || "🌐"; };
 
-  loadSettings();
+  syncFromActiveProfile();
   LSV.i18n = I;
 })();
