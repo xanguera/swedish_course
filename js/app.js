@@ -49,7 +49,13 @@
         var el = U.qs('.tab[data-tab="' + p[0] + '"] .tab__label');
         if (el) el.textContent = I18N.t(p[1]);
       });
-    var lb = U.qs("#lang-btn"); if (lb) lb.textContent = I18N.currentFlag();
+    var ab = U.qs("#profile-btn");
+    if (ab) {
+      var p = LSV.profiles.active();
+      var name = (p && p.name) || "";
+      ab.textContent = LSV.profiles.initials(name);
+      ab.setAttribute("aria-label", name ? I18N.t("settings_title") + " — " + name : I18N.t("settings_title"));
+    }
   }
 
   function updateStats() {
@@ -126,20 +132,11 @@
     return group;
   }
 
-  function viewSetup() {
-    chrome(false);
-    var chosenL1 = I18N.L1 || "en";
-    var chosenL2 = I18N.L2 || "sv";
-    var onboarded = I18N.isOnboarded();
-
-    var head = U.el("div", { class: "setup-head" }, [
-      U.el("h1", { text: onboarded ? I18N.t("settings_title") : I18N.t("setup_title") })
-    ]);
-    if (onboarded) {
-      var x = U.el("button", { class: "setup-close", text: "✕", "aria-label": I18N.t("setup_close") });
-      x.addEventListener("click", function () { location.hash = "#/"; });
-      head.appendChild(x);
-    }
+  /* Reusable L1/L2 picker (only L1 is actually choosable today — there's a
+     single target language, Swedish). Returns the group elements plus a
+     getter for the currently chosen L1 code. */
+  function buildLangPicker(initialL1) {
+    var chosenL1 = initialL1;
 
     var l1group = U.el("div", { class: "setup-group" }, [U.el("div", { class: "setup-group__label", text: I18N.t("setup_l1") })]);
     I18N.langList().forEach(function (lang) {
@@ -173,37 +170,137 @@
     });
     l2group.appendChild(U.el("div", { class: "muted", text: I18N.t("setup_l2_note") }));
 
+    return { l1group: l1group, l2group: l2group, getL1: function () { return chosenL1; } };
+  }
+
+  function nameInputGroup(initialName) {
+    var group = U.el("div", { class: "setup-group" }, [U.el("div", { class: "setup-group__label", text: I18N.t("setup_name") })]);
+    var input = U.el("input", { class: "text-input", type: "text", maxlength: "30", placeholder: I18N.t("setup_name_placeholder") });
+    input.value = initialName || "";
+    group.appendChild(input);
+    return { group: group, input: input };
+  }
+
+  /* Name + language pair form — used for the very first onboarding and for
+     adding a new family member's profile later on. */
+  function viewProfileForm(isNew) {
+    chrome(false);
+    var head = U.el("div", { class: "setup-head" }, [
+      U.el("h1", { text: I18N.t(isNew ? "profile_add_title" : "setup_title") })
+    ]);
+    if (isNew) {
+      var x = U.el("button", { class: "setup-close", text: "✕", "aria-label": I18N.t("setup_close") });
+      x.addEventListener("click", function () { location.hash = "#/setup"; });
+      head.appendChild(x);
+    }
+
+    var name = nameInputGroup("");
+    var picker = buildLangPicker(I18N.L1 || "en");
+
     var confirm = U.el("button", { class: "btn", text: I18N.t("setup_btn") });
     confirm.addEventListener("click", function () {
-      I18N.completeOnboarding(chosenL1, chosenL2);
+      var n = name.input.value.trim();
+      if (!n) { name.input.classList.add("text-input--error"); name.input.focus(); return; }
+      I18N.completeOnboarding(n, picker.getL1(), "sv");
+      P.reload();
+      localizeChrome();
+      if (isNew) toast(I18N.t("toast_profile_switched", { name: n }));
+      if (location.hash === "#/" || location.hash === "") render();
+      else location.hash = "#/";
+    });
+
+    var scr = U.el("div", { class: "onboard fadein" }, [
+      head, name.group, picker.l1group, picker.l2group,
+      U.el("div", { class: "onboard__footer" }, [confirm])
+    ]);
+    U.clear(view).appendChild(scr);
+    window.scrollTo(0, 0);
+  }
+
+  /* Settings screen for an already-onboarded device: switch between family
+     members' profiles, rename the current one, tweak its language pair. */
+  function viewSettings() {
+    chrome(false);
+    var activeId = LSV.profiles.activeId();
+    var activeProfile = LSV.profiles.active();
+
+    var head = U.el("div", { class: "setup-head" }, [U.el("h1", { text: I18N.t("settings_title") })]);
+    var x = U.el("button", { class: "setup-close", text: "✕", "aria-label": I18N.t("setup_close") });
+    x.addEventListener("click", function () { location.hash = "#/"; });
+    head.appendChild(x);
+
+    function switchTo(id, name) {
+      I18N.switchProfile(id);
+      P.reload();
+      localizeChrome();
+      toast(I18N.t("toast_profile_switched", { name: name || I18N.t("profile_unnamed") }));
+      if (location.hash === "#/" || location.hash === "") render();
+      else location.hash = "#/";
+    }
+
+    var profGroup = U.el("div", { class: "setup-group" }, [U.el("div", { class: "setup-group__label", text: I18N.t("profile_section_label") })]);
+    LSV.profiles.list().forEach(function (p) {
+      var isActive = p.id === activeId;
+      var displayName = p.name || I18N.t("profile_unnamed");
+      var row = U.el("button", { class: "profile-row" + (isActive ? " is-active" : ""), type: "button" }, [
+        U.el("div", { class: "profile-row__avatar", text: LSV.profiles.initials(p.name) }),
+        U.el("div", { class: "profile-row__name", text: displayName }),
+        U.el("span", { class: "profile-row__check", text: isActive ? "✓" : "" })
+      ]);
+      if (isActive) row.disabled = true;
+      else row.addEventListener("click", function () { switchTo(p.id, p.name); });
+      profGroup.appendChild(row);
+    });
+    var addBtn = U.el("button", { class: "btn btn--blue btn--sm btn--auto", text: I18N.t("profile_add_btn") });
+    addBtn.addEventListener("click", function () { location.hash = "#/setup/new"; });
+    profGroup.appendChild(addBtn);
+
+    var name = nameInputGroup(activeProfile ? activeProfile.name : "");
+    name.input.addEventListener("change", function () {
+      var n = name.input.value.trim();
+      LSV.profiles.update(activeId, { name: n });
+      localizeChrome();
+    });
+
+    var picker = buildLangPicker(I18N.L1 || "en");
+
+    var confirm = U.el("button", { class: "btn", text: I18N.t("settings_save_btn") });
+    confirm.addEventListener("click", function () {
+      var n = name.input.value.trim();
+      LSV.profiles.update(activeId, { name: n });
+      I18N.setL1(picker.getL1());
+      I18N.setL2("sv");
       localizeChrome();
       if (location.hash === "#/" || location.hash === "") render();
       else location.hash = "#/";
     });
 
-    var groups = [head, l1group, l2group];
-    if (onboarded) groups.push(viewOfflineGroup());
-    groups.push(U.el("div", { class: "onboard__footer" }, [confirm]));
+    var groups = [head, profGroup, name.group, picker.l1group, picker.l2group, viewOfflineGroup(),
+      U.el("div", { class: "onboard__footer" }, [confirm])];
 
     var scr = U.el("div", { class: "onboard fadein" }, groups);
 
-    if (onboarded) {
-      var resetBtn = U.el("button", { class: "btn btn--red btn--sm", text: I18N.t("settings_reset_btn") });
-      resetBtn.addEventListener("click", function () {
-        if (!window.confirm(I18N.t("settings_reset_confirm"))) return;
-        P.reset();
-        toast(I18N.t("settings_reset_done"));
-        location.hash = "#/";
-      });
-      scr.appendChild(U.el("div", { class: "setup-danger" }, [
-        U.el("div", { class: "setup-danger__label", text: I18N.t("settings_reset_title") }),
-        U.el("div", { class: "setup-danger__desc", text: I18N.t("settings_reset_desc") }),
-        resetBtn
-      ]));
-    }
+    var resetBtn = U.el("button", { class: "btn btn--red btn--sm", text: I18N.t("settings_reset_btn") });
+    resetBtn.addEventListener("click", function () {
+      if (!window.confirm(I18N.t("settings_reset_confirm"))) return;
+      P.reset();
+      toast(I18N.t("settings_reset_done"));
+      location.hash = "#/";
+    });
+    scr.appendChild(U.el("div", { class: "setup-danger" }, [
+      U.el("div", { class: "setup-danger__label", text: I18N.t("settings_reset_title") }),
+      U.el("div", { class: "setup-danger__desc", text: I18N.t("settings_reset_desc") }),
+      resetBtn
+    ]));
 
     U.clear(view).appendChild(scr);
     window.scrollTo(0, 0);
+  }
+
+  function viewSetup() {
+    if (!I18N.isOnboarded()) return viewProfileForm(false);
+    if (location.hash === "#/setup/new") return viewProfileForm(true);
+    return viewSettings();
   }
 
   /* ================================================ VIEWS ================ */
@@ -565,10 +662,10 @@
     var hash = location.hash || "#/";
 
     if (!I18N.isOnboarded()) {
-      if (hash === "#/setup") return viewSetup();
+      if (hash === "#/setup" || hash === "#/setup/new") return viewSetup();
       return viewWelcome();
     }
-    if (hash === "#/setup") return viewSetup();
+    if (hash === "#/setup" || hash === "#/setup/new") return viewSetup();
 
     P.setRoute(hash);
     if (hash.indexOf("#/lesson/") === 0) {

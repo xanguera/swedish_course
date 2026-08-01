@@ -63,6 +63,8 @@
     welcome_sub: "Learn a little Swedish for a family trip to Stockholm — words, phrases and fun facts, one small step at a time.",
     welcome_btn: "Get started",
     setup_title: "Set up your course",
+    setup_name: "Your name",
+    setup_name_placeholder: "e.g. Alex",
     setup_l1: "I speak",
     setup_l2: "I want to learn",
     setup_l2_note: "More languages coming soon",
@@ -71,11 +73,20 @@
 
     // settings (setup screen, reopened after onboarding)
     settings_title: "Settings",
+    settings_save_btn: "Save",
     settings_reset_title: "Danger zone",
     settings_reset_desc: "Erase all your lessons, XP, streak and saved words. This can't be undone.",
     settings_reset_btn: "Reset all progress",
     settings_reset_confirm: "Reset all progress? This deletes your lessons, XP, streak and saved words for good.",
     settings_reset_done: "Progress reset",
+
+    // family profiles — one device, several learners, each with their own
+    // name, language pair and progress (stored locally, not shared)
+    profile_section_label: "Family members on this device",
+    profile_unnamed: "Unnamed",
+    profile_add_btn: "+ Add family member",
+    profile_add_title: "Add a family member",
+    toast_profile_switched: "Switched to {name}",
 
     // offline
     offline_title: "Offline",

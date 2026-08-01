@@ -534,14 +534,16 @@ button { font-family: inherit; cursor: pointer; }
 .legal { font-size:12px; color: var(--locked-ink); text-align:center; padding: 20px; font-weight:700; }
 
 /* settings button (topbar) — lives outside .topbar__stats so it always
-   stays full-size & on-screen (see .topbar__stats above). */
-.lang-btn {
+   stays full-size & on-screen (see .topbar__stats above). Shows the active
+   profile's initials, so it also doubles as "who's using this device". */
+.avatar-btn {
   flex-shrink: 0;
-  border: 2px solid var(--blue); background: #fff; border-radius: 12px;
-  width: 40px; height: 34px; font-size: 18px; line-height: 1; padding: 0;
-  display: grid; place-items: center; box-shadow: 0 2px 0 var(--blue);
+  border: 2px solid var(--blue); background: var(--blue); color: #fff;
+  border-radius: 50%; width: 34px; height: 34px; font-size: 13px; font-weight: 900;
+  line-height: 1; padding: 0; display: grid; place-items: center;
+  box-shadow: 0 2px 0 var(--blue-dark);
 }
-.lang-btn:active { transform: translateY(2px); box-shadow: none; }
+.avatar-btn:active { transform: translateY(2px); box-shadow: none; }
 
 /* welcome & setup (onboarding) */
 .onboard {
@@ -576,6 +578,32 @@ button { font-family: inherit; cursor: pointer; }
 .lang-option__meta { flex:1; text-align:left; }
 .lang-option__sub { display:block; font-size:12px; color: var(--ink-soft); font-weight:700; }
 .lang-option__check { color: var(--blue); font-weight: 900; }
+
+.text-input {
+  width: 100%; box-sizing: border-box;
+  border: 2px solid var(--line); border-bottom-width: 4px; border-radius: var(--radius);
+  padding: 14px 16px; font-weight: 800; font-size: 17px; color: var(--ink);
+  font-family: inherit; background: #fff;
+}
+.text-input:focus { outline: none; border-color: var(--blue); }
+.text-input--error { border-color: var(--red); }
+
+.profile-row {
+  width: 100%; display: flex; align-items: center; gap: 14px;
+  border: 2px solid var(--line); border-bottom-width: 4px; background: #fff;
+  border-radius: var(--radius); padding: 10px 16px; margin-bottom: 10px;
+  font-weight: 800; font-size: 17px; color: var(--ink);
+}
+.profile-row:active { transform: translateY(2px); }
+.profile-row.is-active { border-color: var(--blue); background: #ddf4ff; color: var(--blue-dark); }
+.profile-row[disabled] { opacity: 1; }
+.profile-row__avatar {
+  flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+  background: var(--blue); color: #fff; font-size: 13px; font-weight: 900;
+  display: grid; place-items: center;
+}
+.profile-row__name { flex: 1; text-align: left; }
+.profile-row__check { color: var(--blue); font-weight: 900; }
 
 .setup-danger {
   width: 100%; max-width: 400px; margin: 22px 0 4px; padding: 14px;
