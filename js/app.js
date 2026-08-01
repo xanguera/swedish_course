@@ -5,6 +5,11 @@
 
   LSV.offline.register();
 
+  // Point the active data slices (D.vocab/lessons/course/culture) at the chosen
+  // target's course. Called at boot and whenever the learner switches L2.
+  function applyTarget() { D.useTarget(I18N.L2); }
+  applyTarget();
+
   var view = U.qs("#view");
   var topbar = U.qs("#topbar");
   var tabbar = U.qs("#tabbar");
@@ -161,14 +166,19 @@
 
     var l2group = U.el("div", { class: "setup-group" }, [U.el("div", { class: "setup-group__label", text: I18N.t("setup_l2") })]);
     I18N.targetList().forEach(function (tg) {
-      var opt = U.el("button", { class: "lang-option is-selected", type: "button" }, [
+      var opt = U.el("button", { class: "lang-option" + (tg.code === chosenL2 ? " is-selected" : ""), type: "button" }, [
         U.el("span", { class: "lang-option__flag", text: tg.flag }),
         U.el("span", { class: "lang-option__meta" }, [
           U.el("span", { text: tg.endonym }),
           U.el("span", { class: "lang-option__sub", text: tg.name })
         ]),
-        U.el("span", { class: "lang-option__check", text: "✓" })
+        U.el("span", { class: "lang-option__check", text: tg.code === chosenL2 ? "✓" : "" })
       ]);
+      opt.addEventListener("click", function () {
+        chosenL2 = tg.code;
+        U.qsa(".lang-option", l2group).forEach(function (o) { o.classList.remove("is-selected"); o.querySelector(".lang-option__check").textContent = ""; });
+        opt.classList.add("is-selected"); opt.querySelector(".lang-option__check").textContent = "✓";
+      });
       l2group.appendChild(opt);
     });
     l2group.appendChild(U.el("div", { class: "muted", text: I18N.t("setup_l2_note") }));
@@ -176,6 +186,7 @@
     var confirm = U.el("button", { class: "btn", text: I18N.t("setup_btn") });
     confirm.addEventListener("click", function () {
       I18N.completeOnboarding(chosenL1, chosenL2);
+      applyTarget();
       localizeChrome();
       if (location.hash === "#/" || location.hash === "") render();
       else location.hash = "#/";
@@ -303,7 +314,7 @@
           U.el("div", { class: "card__emoji", text: c.emoji }),
           U.el("div", {}, [
             U.el("div", { class: "card__title", text: I18N.cultureTitle(c.id) }),
-            U.el("div", { class: "card__sub", text: c.sv })
+            U.el("div", { class: "card__sub", text: c.l2 })
           ])
         ]),
         U.el("div", { class: "card__body", html: I18N.cultureBody(c.id) })
@@ -336,7 +347,7 @@
         root.appendChild(U.el("div", { class: "vrow" }, [
           U.el("div", { class: "vrow__emoji", text: w.img }),
           U.el("div", { class: "vrow__text" }, [
-            U.el("div", { class: "vrow__sv", text: w.sv }),
+            U.el("div", { class: "vrow__sv", text: w.l2 }),
             U.el("div", { class: "ipa", text: "[" + w.ipa + "]" }),
             U.el("div", { class: "vrow__en", text: w.t })
           ]),
@@ -376,7 +387,7 @@
         body.appendChild(U.el("div", { class: "vrow" }, [
           U.el("div", { class: "vrow__emoji", text: w.img }),
           U.el("div", { class: "vrow__text" }, [
-            U.el("div", { class: "vrow__sv", text: w.sv }),
+            U.el("div", { class: "vrow__sv", text: w.l2 }),
             U.el("div", { class: "ipa", text: "[" + w.ipa + "]" }),
             U.el("div", { class: "vrow__en", text: w.t })
           ]),

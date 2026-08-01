@@ -1,566 +1,660 @@
 [
   {
     "id": "hej",
-    "swedish": "hej",
-    "english": "hi / hello",
+    "target": "sv",
+    "l2": "hej",
+    "en": "hi / hello",
     "file": "assets/audio/sv/hej.mp3"
   },
   {
     "id": "god_morgon",
-    "swedish": "god morgon",
-    "english": "good morning",
+    "target": "sv",
+    "l2": "god morgon",
+    "en": "good morning",
     "file": "assets/audio/sv/god_morgon.mp3"
   },
   {
     "id": "god_kvall",
-    "swedish": "god kväll",
-    "english": "good evening",
+    "target": "sv",
+    "l2": "god kväll",
+    "en": "good evening",
     "file": "assets/audio/sv/god_kvall.mp3"
   },
   {
     "id": "hej_da",
-    "swedish": "hej då",
-    "english": "goodbye",
+    "target": "sv",
+    "l2": "hej då",
+    "en": "goodbye",
     "file": "assets/audio/sv/hej_da.mp3"
   },
   {
     "id": "tack",
-    "swedish": "tack",
-    "english": "thank you",
+    "target": "sv",
+    "l2": "tack",
+    "en": "thank you",
     "file": "assets/audio/sv/tack.mp3"
   },
   {
     "id": "tack_sa_mycket",
-    "swedish": "tack så mycket",
-    "english": "thank you very much",
+    "target": "sv",
+    "l2": "tack så mycket",
+    "en": "thank you very much",
     "file": "assets/audio/sv/tack_sa_mycket.mp3"
   },
   {
     "id": "varsagod",
-    "swedish": "varsågod",
-    "english": "you're welcome / here you go",
+    "target": "sv",
+    "l2": "varsågod",
+    "en": "you're welcome / here you go",
     "file": "assets/audio/sv/varsagod.mp3"
   },
   {
     "id": "ja",
-    "swedish": "ja",
-    "english": "yes",
+    "target": "sv",
+    "l2": "ja",
+    "en": "yes",
     "file": "assets/audio/sv/ja.mp3"
   },
   {
     "id": "nej",
-    "swedish": "nej",
-    "english": "no",
+    "target": "sv",
+    "l2": "nej",
+    "en": "no",
     "file": "assets/audio/sv/nej.mp3"
   },
   {
     "id": "ursakta",
-    "swedish": "ursäkta",
-    "english": "excuse me / sorry",
+    "target": "sv",
+    "l2": "ursäkta",
+    "en": "excuse me / sorry",
     "file": "assets/audio/sv/ursakta.mp3"
   },
   {
     "id": "forlat",
-    "swedish": "förlåt",
-    "english": "sorry (apology)",
+    "target": "sv",
+    "l2": "förlåt",
+    "en": "sorry (apology)",
     "file": "assets/audio/sv/forlat.mp3"
   },
   {
     "id": "snalla",
-    "swedish": "snälla",
-    "english": "please (pleading)",
+    "target": "sv",
+    "l2": "snälla",
+    "en": "please (pleading)",
     "file": "assets/audio/sv/snalla.mp3"
   },
   {
     "id": "talar_du_engelska",
-    "swedish": "Talar du engelska?",
-    "english": "Do you speak English?",
+    "target": "sv",
+    "l2": "Talar du engelska?",
+    "en": "Do you speak English?",
     "file": "assets/audio/sv/talar_du_engelska.mp3"
   },
   {
     "id": "jag_forstar_inte",
-    "swedish": "Jag förstår inte",
-    "english": "I don't understand",
+    "target": "sv",
+    "l2": "Jag förstår inte",
+    "en": "I don't understand",
     "file": "assets/audio/sv/jag_forstar_inte.mp3"
   },
   {
     "id": "jag_heter",
-    "swedish": "Jag heter…",
-    "english": "My name is…",
+    "target": "sv",
+    "l2": "Jag heter…",
+    "en": "My name is…",
     "file": "assets/audio/sv/jag_heter.mp3"
   },
   {
     "id": "jag",
-    "swedish": "jag",
-    "english": "I",
+    "target": "sv",
+    "l2": "jag",
+    "en": "I",
     "file": "assets/audio/sv/jag.mp3"
   },
   {
     "id": "du",
-    "swedish": "du",
-    "english": "you",
+    "target": "sv",
+    "l2": "du",
+    "en": "you",
     "file": "assets/audio/sv/du.mp3"
   },
   {
     "id": "han",
-    "swedish": "han",
-    "english": "he",
+    "target": "sv",
+    "l2": "han",
+    "en": "he",
     "file": "assets/audio/sv/han.mp3"
   },
   {
     "id": "hon",
-    "swedish": "hon",
-    "english": "she",
+    "target": "sv",
+    "l2": "hon",
+    "en": "she",
     "file": "assets/audio/sv/hon.mp3"
   },
   {
     "id": "vad_heter_du",
-    "swedish": "Vad heter du?",
-    "english": "What's your name?",
+    "target": "sv",
+    "l2": "Vad heter du?",
+    "en": "What's your name?",
     "file": "assets/audio/sv/vad_heter_du.mp3"
   },
   {
     "id": "mamma",
-    "swedish": "mamma",
-    "english": "mom",
+    "target": "sv",
+    "l2": "mamma",
+    "en": "mom",
     "file": "assets/audio/sv/mamma.mp3"
   },
   {
     "id": "pappa",
-    "swedish": "pappa",
-    "english": "dad",
+    "target": "sv",
+    "l2": "pappa",
+    "en": "dad",
     "file": "assets/audio/sv/pappa.mp3"
   },
   {
     "id": "syster",
-    "swedish": "syster",
-    "english": "sister",
+    "target": "sv",
+    "l2": "syster",
+    "en": "sister",
     "file": "assets/audio/sv/syster.mp3"
   },
   {
     "id": "bror",
-    "swedish": "bror",
-    "english": "brother",
+    "target": "sv",
+    "l2": "bror",
+    "en": "brother",
     "file": "assets/audio/sv/bror.mp3"
   },
   {
     "id": "familj",
-    "swedish": "familj",
-    "english": "family",
+    "target": "sv",
+    "l2": "familj",
+    "en": "family",
     "file": "assets/audio/sv/familj.mp3"
   },
   {
     "id": "hur_mar_du",
-    "swedish": "Hur mår du?",
-    "english": "How are you?",
+    "target": "sv",
+    "l2": "Hur mår du?",
+    "en": "How are you?",
     "file": "assets/audio/sv/hur_mar_du.mp3"
   },
   {
     "id": "bra",
-    "swedish": "bra",
-    "english": "good / fine",
+    "target": "sv",
+    "l2": "bra",
+    "en": "good / fine",
     "file": "assets/audio/sv/bra.mp3"
   },
   {
     "id": "var_kommer_du_ifran",
-    "swedish": "Var kommer du ifrån?",
-    "english": "Where are you from?",
+    "target": "sv",
+    "l2": "Var kommer du ifrån?",
+    "en": "Where are you from?",
     "file": "assets/audio/sv/var_kommer_du_ifran.mp3"
   },
   {
     "id": "jag_kommer_fran",
-    "swedish": "Jag kommer från…",
-    "english": "I come from…",
+    "target": "sv",
+    "l2": "Jag kommer från…",
+    "en": "I come from…",
     "file": "assets/audio/sv/jag_kommer_fran.mp3"
   },
   {
     "id": "noll",
-    "swedish": "noll",
-    "english": "zero (0)",
+    "target": "sv",
+    "l2": "noll",
+    "en": "zero",
     "file": "assets/audio/sv/noll.mp3"
   },
   {
     "id": "ett",
-    "swedish": "ett",
-    "english": "one (1)",
+    "target": "sv",
+    "l2": "ett",
+    "en": "one",
     "file": "assets/audio/sv/ett.mp3"
   },
   {
     "id": "tva",
-    "swedish": "två",
-    "english": "two (2)",
+    "target": "sv",
+    "l2": "två",
+    "en": "two",
     "file": "assets/audio/sv/tva.mp3"
   },
   {
     "id": "tre",
-    "swedish": "tre",
-    "english": "three (3)",
+    "target": "sv",
+    "l2": "tre",
+    "en": "three",
     "file": "assets/audio/sv/tre.mp3"
   },
   {
     "id": "fyra",
-    "swedish": "fyra",
-    "english": "four (4)",
+    "target": "sv",
+    "l2": "fyra",
+    "en": "four",
     "file": "assets/audio/sv/fyra.mp3"
   },
   {
     "id": "fem",
-    "swedish": "fem",
-    "english": "five (5)",
+    "target": "sv",
+    "l2": "fem",
+    "en": "five",
     "file": "assets/audio/sv/fem.mp3"
   },
   {
     "id": "sex",
-    "swedish": "sex",
-    "english": "six (6)",
+    "target": "sv",
+    "l2": "sex",
+    "en": "six",
     "file": "assets/audio/sv/sex.mp3"
   },
   {
     "id": "sju",
-    "swedish": "sju",
-    "english": "seven (7)",
+    "target": "sv",
+    "l2": "sju",
+    "en": "seven",
     "file": "assets/audio/sv/sju.mp3"
   },
   {
     "id": "atta",
-    "swedish": "åtta",
-    "english": "eight (8)",
+    "target": "sv",
+    "l2": "åtta",
+    "en": "eight",
     "file": "assets/audio/sv/atta.mp3"
   },
   {
     "id": "nio",
-    "swedish": "nio",
-    "english": "nine (9)",
+    "target": "sv",
+    "l2": "nio",
+    "en": "nine",
     "file": "assets/audio/sv/nio.mp3"
   },
   {
     "id": "tio",
-    "swedish": "tio",
-    "english": "ten (10)",
+    "target": "sv",
+    "l2": "tio",
+    "en": "ten",
     "file": "assets/audio/sv/tio.mp3"
   },
   {
     "id": "elva",
-    "swedish": "elva",
-    "english": "eleven (11)",
+    "target": "sv",
+    "l2": "elva",
+    "en": "eleven",
     "file": "assets/audio/sv/elva.mp3"
   },
   {
     "id": "tolv",
-    "swedish": "tolv",
-    "english": "twelve (12)",
+    "target": "sv",
+    "l2": "tolv",
+    "en": "twelve",
     "file": "assets/audio/sv/tolv.mp3"
   },
   {
     "id": "tretton",
-    "swedish": "tretton",
-    "english": "thirteen (13)",
+    "target": "sv",
+    "l2": "tretton",
+    "en": "thirteen",
     "file": "assets/audio/sv/tretton.mp3"
   },
   {
     "id": "fjorton",
-    "swedish": "fjorton",
-    "english": "fourteen (14)",
+    "target": "sv",
+    "l2": "fjorton",
+    "en": "fourteen",
     "file": "assets/audio/sv/fjorton.mp3"
   },
   {
     "id": "femton",
-    "swedish": "femton",
-    "english": "fifteen (15)",
+    "target": "sv",
+    "l2": "femton",
+    "en": "fifteen",
     "file": "assets/audio/sv/femton.mp3"
   },
   {
     "id": "sexton",
-    "swedish": "sexton",
-    "english": "sixteen (16)",
+    "target": "sv",
+    "l2": "sexton",
+    "en": "sixteen",
     "file": "assets/audio/sv/sexton.mp3"
   },
   {
     "id": "sjutton",
-    "swedish": "sjutton",
-    "english": "seventeen (17)",
+    "target": "sv",
+    "l2": "sjutton",
+    "en": "seventeen",
     "file": "assets/audio/sv/sjutton.mp3"
   },
   {
     "id": "arton",
-    "swedish": "arton",
-    "english": "eighteen (18)",
+    "target": "sv",
+    "l2": "arton",
+    "en": "eighteen",
     "file": "assets/audio/sv/arton.mp3"
   },
   {
     "id": "nitton",
-    "swedish": "nitton",
-    "english": "nineteen (19)",
+    "target": "sv",
+    "l2": "nitton",
+    "en": "nineteen",
     "file": "assets/audio/sv/nitton.mp3"
   },
   {
     "id": "tjugo",
-    "swedish": "tjugo",
-    "english": "twenty (20)",
+    "target": "sv",
+    "l2": "tjugo",
+    "en": "twenty",
     "file": "assets/audio/sv/tjugo.mp3"
   },
   {
     "id": "trettio",
-    "swedish": "trettio",
-    "english": "thirty (30)",
+    "target": "sv",
+    "l2": "trettio",
+    "en": "thirty",
     "file": "assets/audio/sv/trettio.mp3"
   },
   {
     "id": "fyrtio",
-    "swedish": "fyrtio",
-    "english": "forty (40)",
+    "target": "sv",
+    "l2": "fyrtio",
+    "en": "forty",
     "file": "assets/audio/sv/fyrtio.mp3"
   },
   {
     "id": "hundra",
-    "swedish": "hundra",
-    "english": "hundred (100)",
+    "target": "sv",
+    "l2": "hundra",
+    "en": "hundred",
     "file": "assets/audio/sv/hundra.mp3"
   },
   {
     "id": "hur_mycket_kostar_det",
-    "swedish": "Hur mycket kostar det?",
-    "english": "How much is it?",
+    "target": "sv",
+    "l2": "Hur mycket kostar det?",
+    "en": "How much is it?",
     "file": "assets/audio/sv/hur_mycket_kostar_det.mp3"
   },
   {
     "id": "kronor",
-    "swedish": "kronor",
-    "english": "kronor (SEK)",
+    "target": "sv",
+    "l2": "kronor",
+    "en": "kronor (SEK)",
     "file": "assets/audio/sv/kronor.mp3"
   },
   {
     "id": "dyrt",
-    "swedish": "dyrt",
-    "english": "expensive",
+    "target": "sv",
+    "l2": "dyrt",
+    "en": "expensive",
     "file": "assets/audio/sv/dyrt.mp3"
   },
   {
     "id": "billigt",
-    "swedish": "billigt",
-    "english": "cheap",
+    "target": "sv",
+    "l2": "billigt",
+    "en": "cheap",
     "file": "assets/audio/sv/billigt.mp3"
   },
   {
     "id": "jag_vill_ha",
-    "swedish": "Jag vill ha…",
-    "english": "I want…",
+    "target": "sv",
+    "l2": "Jag vill ha…",
+    "en": "I want…",
     "file": "assets/audio/sv/jag_vill_ha.mp3"
   },
   {
     "id": "en",
-    "swedish": "en",
-    "english": "a / an (en-word)",
+    "target": "sv",
+    "l2": "en",
+    "en": "a / an (en-word)",
     "file": "assets/audio/sv/en.mp3"
   },
   {
     "id": "ett_art",
-    "swedish": "ett",
-    "english": "a / an (ett-word)",
+    "target": "sv",
+    "l2": "ett",
+    "en": "a / an (ett-word)",
     "file": "assets/audio/sv/ett_art.mp3"
   },
   {
     "id": "det_har",
-    "swedish": "det här",
-    "english": "this (one)",
+    "target": "sv",
+    "l2": "det här",
+    "en": "this (one)",
     "file": "assets/audio/sv/det_har.mp3"
   },
   {
     "id": "kaffe",
-    "swedish": "kaffe",
-    "english": "coffee",
+    "target": "sv",
+    "l2": "kaffe",
+    "en": "coffee",
     "file": "assets/audio/sv/kaffe.mp3"
   },
   {
     "id": "te",
-    "swedish": "te",
-    "english": "tea",
+    "target": "sv",
+    "l2": "te",
+    "en": "tea",
     "file": "assets/audio/sv/te.mp3"
   },
   {
     "id": "bulle",
-    "swedish": "bulle",
-    "english": "bun",
+    "target": "sv",
+    "l2": "bulle",
+    "en": "bun",
     "file": "assets/audio/sv/bulle.mp3"
   },
   {
     "id": "kanelbulle",
-    "swedish": "kanelbulle",
-    "english": "cinnamon bun",
+    "target": "sv",
+    "l2": "kanelbulle",
+    "en": "cinnamon bun",
     "file": "assets/audio/sv/kanelbulle.mp3"
   },
   {
     "id": "kaka",
-    "swedish": "kaka",
-    "english": "cookie / cake",
+    "target": "sv",
+    "l2": "kaka",
+    "en": "cookie / cake",
     "file": "assets/audio/sv/kaka.mp3"
   },
   {
     "id": "jag_skulle_vilja_ha",
-    "swedish": "Jag skulle vilja ha…",
-    "english": "I would like…",
+    "target": "sv",
+    "l2": "Jag skulle vilja ha…",
+    "en": "I would like…",
     "file": "assets/audio/sv/jag_skulle_vilja_ha.mp3"
   },
   {
     "id": "en_kaffe_tack",
-    "swedish": "En kaffe, tack",
-    "english": "A coffee, please",
+    "target": "sv",
+    "l2": "En kaffe, tack",
+    "en": "A coffee, please",
     "file": "assets/audio/sv/en_kaffe_tack.mp3"
   },
   {
     "id": "frukost",
-    "swedish": "frukost",
-    "english": "breakfast",
+    "target": "sv",
+    "l2": "frukost",
+    "en": "breakfast",
     "file": "assets/audio/sv/frukost.mp3"
   },
   {
     "id": "lunch",
-    "swedish": "lunch",
-    "english": "lunch",
+    "target": "sv",
+    "l2": "lunch",
+    "en": "lunch",
     "file": "assets/audio/sv/lunch.mp3"
   },
   {
     "id": "middag",
-    "swedish": "middag",
-    "english": "dinner",
+    "target": "sv",
+    "l2": "middag",
+    "en": "dinner",
     "file": "assets/audio/sv/middag.mp3"
   },
   {
     "id": "vatten",
-    "swedish": "vatten",
-    "english": "water",
+    "target": "sv",
+    "l2": "vatten",
+    "en": "water",
     "file": "assets/audio/sv/vatten.mp3"
   },
   {
     "id": "mjolk",
-    "swedish": "mjölk",
-    "english": "milk",
+    "target": "sv",
+    "l2": "mjölk",
+    "en": "milk",
     "file": "assets/audio/sv/mjolk.mp3"
   },
   {
     "id": "notan_tack",
-    "swedish": "Notan, tack",
-    "english": "The bill, please",
+    "target": "sv",
+    "l2": "Notan, tack",
+    "en": "The bill, please",
     "file": "assets/audio/sv/notan_tack.mp3"
   },
   {
     "id": "smaklig_maltid",
-    "swedish": "Smaklig måltid",
-    "english": "Enjoy your meal",
+    "target": "sv",
+    "l2": "Smaklig måltid",
+    "en": "Enjoy your meal",
     "file": "assets/audio/sv/smaklig_maltid.mp3"
   },
   {
     "id": "tunnelbana",
-    "swedish": "tunnelbana",
-    "english": "metro / subway",
+    "target": "sv",
+    "l2": "tunnelbana",
+    "en": "metro / subway",
     "file": "assets/audio/sv/tunnelbana.mp3"
   },
   {
     "id": "buss",
-    "swedish": "buss",
-    "english": "bus",
+    "target": "sv",
+    "l2": "buss",
+    "en": "bus",
     "file": "assets/audio/sv/buss.mp3"
   },
   {
     "id": "tag",
-    "swedish": "tåg",
-    "english": "train",
+    "target": "sv",
+    "l2": "tåg",
+    "en": "train",
     "file": "assets/audio/sv/tag.mp3"
   },
   {
     "id": "sparvagn",
-    "swedish": "spårvagn",
-    "english": "tram",
+    "target": "sv",
+    "l2": "spårvagn",
+    "en": "tram",
     "file": "assets/audio/sv/sparvagn.mp3"
   },
   {
     "id": "biljett",
-    "swedish": "biljett",
-    "english": "ticket",
+    "target": "sv",
+    "l2": "biljett",
+    "en": "ticket",
     "file": "assets/audio/sv/biljett.mp3"
   },
   {
     "id": "var_ar",
-    "swedish": "Var är…?",
-    "english": "Where is…?",
+    "target": "sv",
+    "l2": "Var är…?",
+    "en": "Where is…?",
     "file": "assets/audio/sv/var_ar.mp3"
   },
   {
     "id": "till",
-    "swedish": "till",
-    "english": "to",
+    "target": "sv",
+    "l2": "till",
+    "en": "to",
     "file": "assets/audio/sv/till.mp3"
   },
   {
     "id": "fran",
-    "swedish": "från",
-    "english": "from",
+    "target": "sv",
+    "l2": "från",
+    "en": "from",
     "file": "assets/audio/sv/fran.mp3"
   },
   {
     "id": "hoger",
-    "swedish": "höger",
-    "english": "right",
+    "target": "sv",
+    "l2": "höger",
+    "en": "right",
     "file": "assets/audio/sv/hoger.mp3"
   },
   {
     "id": "vanster",
-    "swedish": "vänster",
-    "english": "left",
+    "target": "sv",
+    "l2": "vänster",
+    "en": "left",
     "file": "assets/audio/sv/vanster.mp3"
   },
   {
     "id": "rakt_fram",
-    "swedish": "rakt fram",
-    "english": "straight ahead",
+    "target": "sv",
+    "l2": "rakt fram",
+    "en": "straight ahead",
     "file": "assets/audio/sv/rakt_fram.mp3"
   },
   {
     "id": "gamla_stan",
-    "swedish": "Gamla stan",
-    "english": "the Old Town",
+    "target": "sv",
+    "l2": "Gamla stan",
+    "en": "the Old Town",
     "file": "assets/audio/sv/gamla_stan.mp3"
   },
   {
     "id": "slottet",
-    "swedish": "slottet",
-    "english": "the palace",
+    "target": "sv",
+    "l2": "slottet",
+    "en": "the palace",
     "file": "assets/audio/sv/slottet.mp3"
   },
   {
     "id": "museet",
-    "swedish": "museet",
-    "english": "the museum",
+    "target": "sv",
+    "l2": "museet",
+    "en": "the museum",
     "file": "assets/audio/sv/museet.mp3"
   },
   {
     "id": "kyrka",
-    "swedish": "kyrka",
-    "english": "church",
+    "target": "sv",
+    "l2": "kyrka",
+    "en": "church",
     "file": "assets/audio/sv/kyrka.mp3"
   },
   {
     "id": "torg",
-    "swedish": "torg",
-    "english": "square",
+    "target": "sv",
+    "l2": "torg",
+    "en": "square",
     "file": "assets/audio/sv/torg.mp3"
   },
   {
     "id": "oppettider",
-    "swedish": "öppettider",
-    "english": "opening hours",
+    "target": "sv",
+    "l2": "öppettider",
+    "en": "opening hours",
     "file": "assets/audio/sv/oppettider.mp3"
   },
   {
     "id": "var_ar_toaletten",
-    "swedish": "Var är toaletten?",
-    "english": "Where is the toilet?",
+    "target": "sv",
+    "l2": "Var är toaletten?",
+    "en": "Where is the toilet?",
     "file": "assets/audio/sv/var_ar_toaletten.mp3"
   },
   {
     "id": "kan_jag_ta_ett_foto",
-    "swedish": "Kan jag ta ett foto?",
-    "english": "Can I take a photo?",
+    "target": "sv",
+    "l2": "Kan jag ta ett foto?",
+    "en": "Can I take a photo?",
     "file": "assets/audio/sv/kan_jag_ta_ett_foto.mp3"
   }
 ]

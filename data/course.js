@@ -2,7 +2,7 @@
    Order here defines unlock order. Colors drive the unit banners & nodes. */
 (function () {
   "use strict";
-  LSV.data.course = {
+  LSV.data.registerCourse("sv", { course: {
     title: "Svenska för Stockholm",
     subtitle: "Swedish for our family trip",
     units: [
@@ -35,5 +35,5 @@
           { id: "m10", title: "Around Stockholm", lessons: ["l17", "l18"] }
         ] }
     ]
-  };
+  } });
 })();

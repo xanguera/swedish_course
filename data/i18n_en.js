@@ -8,7 +8,7 @@
   // Language registry (L1 = mother tongues, L2 = languages you can learn).
   I.registerLang("en", { name: "English", endonym: "English", flag: "🇬🇧" });
   I.registerLang("pt", { name: "Portuguese (European)", endonym: "Português", flag: "🇵🇹" });
-  I.registerTarget("sv", { name: "Swedish", endonym: "Svenska", flag: "🇸🇪" });
+  I.registerTarget("sv", { name: "Swedish", endonym: "Svenska", flag: "🇸🇪", bcp47: "sv-SE" });
 
   I.registerUI("en", {
     // tabs / chrome

@@ -1,5 +1,5 @@
 /* i18n.js — localization engine + language settings.
-   The Swedish course (vocab `sv`, ids, lesson structure, culture facts) is
+   The course content (vocab `l2` text, ids, lesson structure, culture facts) is
    language-neutral. Each mother tongue (L1) provides:
      - UI strings           via LSV.i18n.registerUI(code, {...})
      - content translations via LSV.i18n.registerContent(code, {...})
@@ -44,13 +44,13 @@
     return interp(s, vars);
   };
 
-  /* Merged vocab view for the current L1: {id, sv, ipa, img, tags, t, note}. */
+  /* Merged vocab view for the current L1: {id, l2, ipa, img, tags, t, note}. */
   I.word = function (id) {
     var w = LSV.data.vocab[id];
     if (!w) return null;
     var c = I.content[I.L1], o = c && c.vocab && c.vocab[id];
     return {
-      id: id, sv: w.sv, ipa: w.ipa, img: w.img, tags: w.tags,
+      id: id, l2: w.l2, ipa: w.ipa, img: w.img, tags: w.tags,
       t: (o && o.t != null) ? o.t : w.en,
       note: (o && o.note != null) ? o.note : (w.note || "")
     };

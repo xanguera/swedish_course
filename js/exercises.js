@@ -17,15 +17,15 @@
         case "flashcards":
           steps.push({ kind: "flashcards", items: ex.items, graded: false }); break;
         case "mc_img_word":
-          ex.items.forEach(function (id) { steps.push({ kind: "choice", mode: "img2sv", target: id, graded: true }); }); break;
+          ex.items.forEach(function (id) { steps.push({ kind: "choice", mode: "img2word", target: id, graded: true }); }); break;
         case "mc_word_en":
-          ex.items.forEach(function (id) { steps.push({ kind: "choice", mode: "sv2en", target: id, graded: true }); }); break;
+          ex.items.forEach(function (id) { steps.push({ kind: "choice", mode: "word2meaning", target: id, graded: true }); }); break;
         case "listen_choose":
           ex.items.forEach(function (id) { steps.push({ kind: "choice", mode: "listen", target: id, graded: true }); }); break;
         case "match_pairs":
           steps.push({ kind: "match", items: ex.items, graded: true }); break;
         case "fill_blank":
-          steps.push({ kind: "fill", sv: ex.sv, hintEn: ex.en, ipa: ex.ipa, lessonId: lesson.id, answer: ex.answer, bank: ex.bank, graded: true }); break;
+          steps.push({ kind: "fill", l2: ex.l2, hintEn: ex.en, ipa: ex.ipa, lessonId: lesson.id, answer: ex.answer, bank: ex.bank, graded: true }); break;
         case "listen_repeat":
           steps.push({ kind: "repeat", items: ex.items, graded: false }); break;
       }
@@ -67,16 +67,16 @@
     var selected = null, checked = false;
 
     var stage = U.el("div", { class: "ex__stage" });
-    var titleText = step.mode === "sv2en" ? I18N.t("q_meaning")
+    var titleText = step.mode === "word2meaning" ? I18N.t("q_meaning")
                   : step.mode === "listen" ? I18N.t("q_listen")
                   : I18N.t("q_which");
     host.appendChild(U.el("div", { class: "ex__title", text: titleText }));
 
-    if (step.mode === "img2sv") {
+    if (step.mode === "img2word") {
       stage.appendChild(U.el("div", { class: "ex__image", text: target.img }));
-    } else if (step.mode === "sv2en") {
+    } else if (step.mode === "word2meaning") {
       stage.appendChild(U.el("div", { class: "bigword" }, [
-        U.el("span", { class: "bigword__sv", text: target.sv }), speaker(target.id)
+        U.el("span", { class: "bigword__sv", text: target.l2 }), speaker(target.id)
       ]));
       stage.appendChild(ipaEl(target.ipa));
     } else { /* listen */
@@ -85,15 +85,15 @@
     }
     host.appendChild(stage);
 
-    var grid = step.mode === "sv2en";
+    var grid = step.mode === "word2meaning";
     var choices = U.el("div", { class: "choices" + (grid ? "" : " choices--grid") });
 
     options.forEach(function (w) {
-      var label = step.mode === "sv2en" ? I18N.tr(w.id) : w.sv;
+      var label = step.mode === "word2meaning" ? I18N.tr(w.id) : w.l2;
       var kids = [];
-      if (step.mode !== "sv2en") kids.push(U.el("div", { class: "choice__emoji", text: w.img }));
+      if (step.mode !== "word2meaning") kids.push(U.el("div", { class: "choice__emoji", text: w.img }));
       kids.push(U.el("span", { text: label }));
-      if (step.mode !== "sv2en") kids.push(ipaEl(w.ipa, "ipa--sm"));
+      if (step.mode !== "word2meaning") kids.push(ipaEl(w.ipa, "ipa--sm"));
       var btn = U.el("button", { class: "choice", type: "button" }, kids);
       btn.addEventListener("click", function () {
         if (checked) return;
@@ -123,7 +123,7 @@
         if (!correct) LSV.progress.touchSrs(target.id, false);
         else LSV.progress.touchSrs(target.id, true);
         var tr = I18N.tr(target.id);
-        var ans = step.mode === "sv2en" ? tr : (target.sv + " [" + target.ipa + "] — " + tr);
+        var ans = step.mode === "word2meaning" ? tr : (target.l2 + " [" + target.ipa + "] — " + tr);
         return { correct: !!correct, answer: ans, vocabId: target.id };
       }
     };
@@ -135,17 +135,17 @@
     var words = step.items.map(U.v);
     var mistakes = 0, cleared = 0, firstPick = null;
 
-    var left = U.shuffle(words).map(function (w) { return { w: w, side: "sv" }; });
-    var right = U.shuffle(words).map(function (w) { return { w: w, side: "en" }; });
+    var left = U.shuffle(words).map(function (w) { return { w: w, side: "l2" }; });
+    var right = U.shuffle(words).map(function (w) { return { w: w, side: "l1" }; });
 
     var grid = U.el("div", { class: "match" });
     var colL = U.el("div", { class: "choices" });
     var colR = U.el("div", { class: "choices" });
 
     function makeTile(item) {
-      var text = item.side === "sv" ? item.w.sv : item.w.en;
-      var kids = item.side === "sv" ? [U.el("span", { text: item.w.img + " " }), U.el("div", { class: "match-tile__word" }, [
-                    U.el("span", { text: item.w.sv }), ipaEl(item.w.ipa, "ipa--sm")
+      var text = item.side === "l2" ? item.w.l2 : item.w.en;
+      var kids = item.side === "l2" ? [U.el("span", { text: item.w.img + " " }), U.el("div", { class: "match-tile__word" }, [
+                    U.el("span", { text: item.w.l2 }), ipaEl(item.w.ipa, "ipa--sm")
                   ])]
                                     : [U.el("span", { text: I18N.tr(item.w.id) })];
       var t = U.el("button", { class: "match-tile", type: "button" }, kids);
@@ -166,7 +166,7 @@
         firstPick = tile; tile.classList.add("is-selected");
         return;
       }
-      if (!firstPick) { firstPick = tile; tile.classList.add("is-selected"); if (tile._item.side === "sv") A.play(tile._item.w.id); return; }
+      if (!firstPick) { firstPick = tile; tile.classList.add("is-selected"); if (tile._item.side === "l2") A.play(tile._item.w.id); return; }
       // second pick
       var a = firstPick, b = tile;
       if (a._item.w.id === b._item.w.id && a._item.side !== b._item.side) {
@@ -201,7 +201,7 @@
     host.appendChild(U.el("div", { class: "muted center", text: hint }));
     var checked = false, filled = null;
 
-    var parts = step.sv.split("___");
+    var parts = step.l2.split("___");
     var blank = U.el("span", { class: "blank", text: "         " });
     var sentence = U.el("div", { class: "sentence" }, [
       document.createTextNode(parts[0]), blank, document.createTextNode(parts[1] || "")
@@ -229,8 +229,8 @@
         checked = true;
         var correct = filled === step.answer;
         blank.style.color = correct ? "#4c8a02" : "#e63f3f";
-        if (correct) A.say(step.sv.replace("___", step.answer));
-        var full = step.sv.replace("___", step.answer);
+        if (correct) A.say(step.l2.replace("___", step.answer));
+        var full = step.l2.replace("___", step.answer);
         var ipaPart = step.ipa ? " [" + step.ipa + "]" : "";
         return { correct: correct, answer: full + ipaPart + " — " + hint };
       }
@@ -273,7 +273,7 @@
       var tw = I18N.word(w.id);
       front.appendChild(U.el("div", { class: "flashcard__emoji", text: w.img }));
       front.appendChild(U.el("div", { class: "flashcard__word" }, [
-        U.el("div", { class: "flashcard__sv", text: w.sv }), ipaEl(w.ipa)
+        U.el("div", { class: "flashcard__sv", text: w.l2 }), ipaEl(w.ipa)
       ]));
       front.appendChild(speaker(w.id, true));
       front.appendChild(U.el("div", { class: "flashcard__hint", text: I18N.t("fc_hint") }));
@@ -322,7 +322,7 @@
 
     function paint() {
       var w = U.v(ids[i]);
-      emoji.textContent = w.img; sv.textContent = w.sv; ipa.textContent = "[" + w.ipa + "]"; en.textContent = I18N.tr(w.id);
+      emoji.textContent = w.img; sv.textContent = w.l2; ipa.textContent = "[" + w.ipa + "]"; en.textContent = I18N.tr(w.id);
       var nsp = speaker(w.id, true); sp.replaceWith(nsp); sp = nsp;
       U.clear(dots);
       ids.forEach(function (_, k) { dots.appendChild(U.el("span", { class: "dot" + (k === i ? " is-on" : "") })); });

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-/* Regenerates assets/audio/manifest.json from data/vocab.js.
+/* Regenerates assets/audio/manifest.json from every registered course's vocab.
+   One entry per clip, across all targets (audio lives in assets/audio/<L2>/).
    Run whenever you add or change vocabulary:  node scripts/build_manifest.js */
 "use strict";
 const fs = require("fs");
@@ -7,15 +8,23 @@ const path = require("path");
 
 global.window = {};
 global.LSV = { data: {} };
+require(path.join(__dirname, "..", "js", "coredata.js"));
 require(path.join(__dirname, "..", "data", "vocab.js"));
 
-const vocab = global.LSV.data.vocab;
-const list = Object.keys(vocab).map((id) => ({
-  id: id,
-  swedish: vocab[id].sv,
-  english: vocab[id].en,
-  file: "assets/audio/sv/" + id + ".mp3"
-}));
+const courses = global.LSV.data.courses;
+const list = [];
+Object.keys(courses).forEach((code) => {
+  const vocab = courses[code].vocab || {};
+  Object.keys(vocab).forEach((id) => {
+    list.push({
+      id: id,
+      target: code,
+      l2: vocab[id].l2,
+      en: vocab[id].en,
+      file: "assets/audio/" + code + "/" + id + ".mp3"
+    });
+  });
+});
 
 const out = path.join(__dirname, "..", "assets", "audio", "manifest.json");
 fs.mkdirSync(path.dirname(out), { recursive: true });

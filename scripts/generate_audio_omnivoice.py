@@ -120,7 +120,7 @@ def main():
 
     if args.dry_run:
         for e in missing:
-            log(f"  · {e['id']}  «{e['swedish']}»")
+            log(f"  · {e['id']}  «{e['l2']}»")
         log("(dry run — nothing generated)")
         return
 
@@ -167,7 +167,7 @@ def main():
         # 4) Generate each clip.
         ok, fail = 0, 0
         for i, e in enumerate(missing, 1):
-            cid, text = e["id"], e["swedish"]
+            cid, text = e["id"], e["l2"]
             try:
                 kwargs = dict(text=text, **gen_common)
                 if clone_prompt is not None:

@@ -31,11 +31,11 @@ command -v ffmpeg >/dev/null 2>&1 || { echo "❌ 'ffmpeg' not found. Install wit
 
 mkdir -p "$OUT"
 
-# Pull "id<TAB>swedish" lines out of the JSON manifest with python3.
+# Pull "id<TAB>l2" lines out of the JSON manifest with python3.
 python3 - "$MANIFEST" <<'PY' | while IFS=$'\t' read -r id text; do
 import json, sys
 for e in json.load(open(sys.argv[1])):
-    print(f"{e['id']}\t{e['swedish']}")
+    print(f"{e['id']}\t{e['l2']}")
 PY
   target="$OUT/$id.mp3"
   if [ -f "$target" ] && [ "$FORCE" != "--force" ]; then

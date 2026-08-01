@@ -6,10 +6,14 @@ const path = require("path");
 global.window = {};
 global.LSV = { data: {} };
 require(path.join(__dirname, "..", "js", "i18n.js"));
+require(path.join(__dirname, "..", "js", "coredata.js"));
 ["vocab", "culture", "lessons", "course"].forEach((f) =>
   require(path.join(__dirname, "..", "data", f + ".js")));
 ["i18n_en", "i18n_pt"].forEach((f) => require(path.join(__dirname, "..", "data", f + ".js")));
 
+// Activate the target course to verify. (One target today; when more courses are
+// registered, wrap the checks below in a loop over Object.keys(LSV.data.courses).)
+LSV.data.useTarget("sv");
 const { vocab, lessons, course, cultureById } = LSV.data;
 const errs = [];
 const warns = [];
@@ -46,7 +50,7 @@ Object.keys(lessons).forEach((lid) => {
     } else if (ex.type === "fill_blank") {
       if (!ex.answer) E(`lesson '${lid}' fill_blank missing answer`);
       if (!ex.bank || ex.bank.indexOf(ex.answer) < 0) E(`lesson '${lid}' fill_blank answer '${ex.answer}' not in bank`);
-      if ((ex.sv || "").indexOf("___") < 0) E(`lesson '${lid}' fill_blank sv has no '___' blank`);
+      if ((ex.l2 || "").indexOf("___") < 0) E(`lesson '${lid}' fill_blank l2 has no '___' blank`);
     } else {
       E(`lesson '${lid}' ex#${xi} has unknown type '${ex.type}'`);
     }
@@ -70,7 +74,7 @@ Object.keys(lessons).forEach((lid) => {
 // 4. Vocab sanity: required fields.
 Object.keys(vocab).forEach((id) => {
   const w = vocab[id];
-  ["sv", "en", "img", "tags"].forEach((k) => { if (w[k] == null) E(`vocab '${id}' missing '${k}'`); });
+  ["l2", "en", "img", "tags"].forEach((k) => { if (w[k] == null) E(`vocab '${id}' missing '${k}'`); });
   if (!Array.isArray(w.tags) || !w.tags.length) E(`vocab '${id}' has no tags`);
 });
 
