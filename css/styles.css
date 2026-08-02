@@ -604,6 +604,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .profile-row__name { flex: 1; text-align: left; }
 .profile-row__check { color: var(--blue); font-weight: 900; }
+.profile-row__go { color: var(--locked-ink); font-weight: 900; font-size: 22px; line-height: 1; }
 
 .setup-danger {
   width: 100%; max-width: 400px; margin: 22px 0 4px; padding: 14px;

@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 node_modules/
 .venv/
+
+# Local-only Claude Code skill (not shared to GitHub)
+.claude/skills/new-language/

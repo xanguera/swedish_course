@@ -8,7 +8,7 @@
   // Language registry (L1 = mother tongues, L2 = languages you can learn).
   I.registerLang("en", { name: "English", endonym: "English", flag: "🇬🇧" });
   I.registerLang("pt", { name: "Portuguese (European)", endonym: "Português", flag: "🇵🇹" });
-  I.registerTarget("sv", { name: "Swedish", endonym: "Svenska", flag: "🇸🇪" });
+  I.registerTarget("sv", { name: "Swedish", endonym: "Svenska", flag: "🇸🇪", bcp47: "sv-SE" });
 
   I.registerUI("en", {
     // tabs / chrome
@@ -80,13 +80,17 @@
     settings_reset_confirm: "Reset all progress? This deletes your lessons, XP, streak and saved words for good.",
     settings_reset_done: "Progress reset",
 
-    // family profiles — one device, several learners, each with their own
-    // name, language pair and progress (stored locally, not shared)
+    // learner profiles (multiple family members per device)
     profile_section_label: "Family members on this device",
     profile_unnamed: "Unnamed",
     profile_add_btn: "+ Add family member",
     profile_add_title: "Add a family member",
     toast_profile_switched: "Switched to {name}",
+
+    // session profile picker ("who's playing")
+    picker_title: "Who's learning?",
+    picker_choose: "Choose your profile",
+    picker_add_btn: "+ New user",
 
     // offline
     offline_title: "Offline",

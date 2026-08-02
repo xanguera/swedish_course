@@ -1,11 +1,11 @@
 /* lessons.js — each lesson = teach items + a sequence of exercises.
    Exercise types:
      flashcards      {items:[ids]}                 (learn, ungraded)
-     mc_img_word     {items:[ids]}                 (see picture → pick Swedish)
-     mc_word_en      {items:[ids]}                 (see Swedish → pick English)
+     mc_img_word     {items:[ids]}                 (see picture → pick L2 word)
+     mc_word_en      {items:[ids]}                 (see L2 word → pick meaning)
      listen_choose   {items:[ids]}                 (hear it → pick the word)
-     match_pairs     {items:[ids]}                 (match Swedish ↔ English)
-     fill_blank      {sv, en, answer, bank:[...]}   (tap the missing word)
+     match_pairs     {items:[ids]}                 (match L2 ↔ meaning)
+     fill_blank      {l2, en, answer, bank:[...]}   (tap the missing word)
      listen_repeat   {items:[ids]}                 (say it aloud, ungraded)
    Distractors for MC/listen are generated from vocab that shares a tag. */
 (function () {
@@ -135,7 +135,7 @@
     teach: ["jag_skulle_vilja_ha", "en_kaffe_tack", "notan_tack", "smaklig_maltid"],
     exercises: [
       { type: "flashcards", items: ["jag_skulle_vilja_ha", "en_kaffe_tack", "notan_tack", "smaklig_maltid"] },
-      { type: "fill_blank", sv: "En ___, tack", en: "A coffee, please", ipa: "eːn ˈkafːɛ tak", answer: "kaffe", bank: ["kaffe", "te", "vatten", "mjölk"] },
+      { type: "fill_blank", l2: "En ___, tack", en: "A coffee, please", ipa: "eːn ˈkafːɛ tak", answer: "kaffe", bank: ["kaffe", "te", "vatten", "mjölk"] },
       { type: "mc_word_en", items: ["notan_tack", "smaklig_maltid", "jag_skulle_vilja_ha"] },
       { type: "listen_repeat", items: ["en_kaffe_tack", "notan_tack"] }
     ],
@@ -167,7 +167,7 @@
     exercises: [
       { type: "flashcards", items: ["var_ar", "till", "fran", "hoger", "vanster", "rakt_fram"] },
       { type: "mc_img_word", items: ["hoger", "vanster", "rakt_fram", "till"] },
-      { type: "fill_blank", sv: "Var ___ tunnelbanan?", en: "Where is the metro?", ipa: "vɑːr ɛː ˈtɵnːɛlˌbɑːnan", answer: "är", bank: ["är", "till", "från", "kommer"] },
+      { type: "fill_blank", l2: "Var ___ tunnelbanan?", en: "Where is the metro?", ipa: "vɑːr ɛː ˈtɵnːɛlˌbɑːnan", answer: "är", bank: ["är", "till", "från", "kommer"] },
       { type: "match_pairs", items: ["var_ar", "till", "fran", "hoger", "vanster", "rakt_fram"] }
     ],
     culture: ["allemansratten"] });
@@ -188,10 +188,10 @@
     exercises: [
       { type: "flashcards", items: ["oppettider", "var_ar_toaletten", "kan_jag_ta_ett_foto"] },
       { type: "mc_word_en", items: ["oppettider", "var_ar_toaletten", "kan_jag_ta_ett_foto"] },
-      { type: "fill_blank", sv: "Var är ___?", en: "Where is the toilet?", ipa: "vɑːr ɛː tuaˈlɛtːɛn", answer: "toaletten", bank: ["toaletten", "slottet", "museet", "torget"] },
+      { type: "fill_blank", l2: "Var är ___?", en: "Where is the toilet?", ipa: "vɑːr ɛː tuaˈlɛtːɛn", answer: "toaletten", bank: ["toaletten", "slottet", "museet", "torget"] },
       { type: "listen_repeat", items: ["var_ar_toaletten", "kan_jag_ta_ett_foto"] }
     ],
     culture: ["midsommar"] });
 
-  LSV.data.lessons = L;
+  LSV.data.registerCourse("sv", { lessons: L });
 })();

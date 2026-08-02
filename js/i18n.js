@@ -1,5 +1,5 @@
 /* i18n.js — localization engine + language settings.
-   The Swedish course (vocab `sv`, ids, lesson structure, culture facts) is
+   The course content (vocab `l2` text, ids, lesson structure, culture facts) is
    language-neutral. Each mother tongue (L1) provides:
      - UI strings           via LSV.i18n.registerUI(code, {...})
      - content translations via LSV.i18n.registerContent(code, {...})
@@ -13,10 +13,10 @@
 
   var I = {
     L1: "en", L2: "sv", onboarded: false,
-    langs: {}, targets: {}, ui: {}, content: {}, _course: null
+    langs: {}, targets: {}, ui: {}, uiTarget: {}, content: {}, _course: null
   };
 
-  /* Language pair now lives on the active profile (see profiles.js) —
+  /* Language pair now lives on the active learner profile (see profiles.js) —
      re-read it whenever the active profile changes. */
   function syncFromActiveProfile() {
     var p = LSV.profiles.active();
@@ -35,23 +35,35 @@
   I.registerLang = function (code, meta) { I.langs[code] = Object.assign({ code: code }, meta); };
   I.registerTarget = function (code, meta) { I.targets[code] = Object.assign({ code: code }, meta); };
   I.registerUI = function (code, obj) { I.ui[code] = Object.assign(I.ui[code] || {}, obj); };
-  I.registerContent = function (code, obj) { I.content[code] = obj; };
+  /* Course-flavoured UI overrides for one (L1, L2) pair (mascot, hero, culture header…). */
+  I.registerUITarget = function (l1, l2, obj) {
+    var m = I.uiTarget[l1] = I.uiTarget[l1] || {};
+    m[l2] = Object.assign(m[l2] || {}, obj);
+  };
+  /* Content translations for one (L1, L2) pair: {vocab, lessons, units, modules, culture}. */
+  I.registerContent = function (l1, l2, obj) { (I.content[l1] = I.content[l1] || {})[l2] = obj; };
 
-  /* UI string for the current L1 (fallback: English, then the key itself). */
+  /* Active (L1, L2) content bucket, or undefined. */
+  function content1() { var c = I.content[I.L1]; return c && c[I.L2]; }
+
+  /* UI string for the current L1+L2: target override → L1 generic → en override → en → key. */
   I.t = function (key, vars) {
-    var s = I.ui[I.L1] && I.ui[I.L1][key];
+    var s, ut = I.uiTarget[I.L1] && I.uiTarget[I.L1][I.L2];
+    if (ut && ut[key] != null) s = ut[key];
+    if (s == null) s = I.ui[I.L1] && I.ui[I.L1][key];
+    if (s == null) { var ue = I.uiTarget.en && I.uiTarget.en[I.L2]; if (ue && ue[key] != null) s = ue[key]; }
     if (s == null) s = I.ui.en && I.ui.en[key];
     if (s == null) s = key;
     return interp(s, vars);
   };
 
-  /* Merged vocab view for the current L1: {id, sv, ipa, img, tags, t, note}. */
+  /* Merged vocab view for the current L1: {id, l2, ipa, img, tags, t, note}. */
   I.word = function (id) {
     var w = LSV.data.vocab[id];
     if (!w) return null;
-    var c = I.content[I.L1], o = c && c.vocab && c.vocab[id];
+    var c = content1(), o = c && c.vocab && c.vocab[id];
     return {
-      id: id, sv: w.sv, ipa: w.ipa, img: w.img, tags: w.tags,
+      id: id, l2: w.l2, ipa: w.ipa, img: w.img, tags: w.tags,
       t: (o && o.t != null) ? o.t : w.en,
       note: (o && o.note != null) ? o.note : (w.note || "")
     };
@@ -59,7 +71,7 @@
   I.tr = function (id) { var w = I.word(id); return w ? w.t : id; };
 
   function lessonEntry(id) {
-    var c = I.content[I.L1];
+    var c = content1();
     if (c && c.lessons && c.lessons[id] != null) return c.lessons[id];
     return LSV.data.lessons[id] ? LSV.data.lessons[id].title : id;
   }
@@ -81,22 +93,22 @@
     return I._course;
   }
   I.unitTitle = function (id) {
-    var c = I.content[I.L1];
+    var c = content1();
     if (c && c.units && c.units[id] != null) return c.units[id];
     var mp = courseMaps(); return mp.u[id] ? mp.u[id].title : id;
   };
   I.moduleTitle = function (id) {
-    var c = I.content[I.L1];
+    var c = content1();
     if (c && c.modules && c.modules[id] != null) return c.modules[id];
     var mp = courseMaps(); return mp.m[id] ? mp.m[id].title : id;
   };
   I.cultureTitle = function (id) {
-    var c = I.content[I.L1];
+    var c = content1();
     if (c && c.culture && c.culture[id]) return c.culture[id].title;
     var cc = LSV.data.cultureById[id]; return cc ? cc.title : id;
   };
   I.cultureBody = function (id) {
-    var c = I.content[I.L1];
+    var c = content1();
     if (c && c.culture && c.culture[id]) return c.culture[id].body;
     var cc = LSV.data.cultureById[id]; return cc ? cc.body : "";
   };
@@ -113,8 +125,8 @@
   };
   I.isOnboarded = function () { return LSV.profiles.hasAny(); };
 
-  /* Switch which family member's profile is active; reloads L1/L2 (and
-     the caller is responsible for reloading progress — see LSV.progress.reload). */
+  /* Switch which family member's profile is active; reloads L1/L2. The caller
+     is responsible for reloading course data + progress (applyTarget / P.reload). */
   I.switchProfile = function (id) {
     if (!LSV.profiles.switchTo(id)) return false;
     syncFromActiveProfile();

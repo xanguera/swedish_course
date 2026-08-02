@@ -5,6 +5,11 @@
 
   LSV.offline.register();
 
+  // Point the active data slices (D.vocab/lessons/course/culture) at the chosen
+  // target's course. Called at boot and whenever the learner switches L2.
+  function applyTarget() { D.useTarget(I18N.L2); }
+  applyTarget();
+
   var view = U.qs("#view");
   var topbar = U.qs("#topbar");
   var tabbar = U.qs("#tabbar");
@@ -13,6 +18,15 @@
   function moose(cls) {
     var wrap = U.el("div");
     wrap.className = "mascot " + (cls || "");
+    // Per-target mascot: emoji from the registry (e.g. Catalan 🐉), else the built-in moose SVG (sv).
+    var tg = I18N.targets[I18N.L2] || {};
+    if (tg.mascot) {
+      wrap.setAttribute("role", "img");
+      wrap.setAttribute("aria-label", tg.mascotName || "mascot");
+      wrap.textContent = tg.mascot;
+      wrap.style.cssText = "display:flex;align-items:center;justify-content:center;line-height:1;font-size:" + (/lg/.test(cls || "") ? "72px" : "44px");
+      return wrap;
+    }
     wrap.innerHTML =
       '<svg viewBox="0 0 120 120" width="100%" height="100%" role="img" aria-label="Älgot the moose">' +
       '<g fill="#a9743f">' +
@@ -43,6 +57,26 @@
   /* ------------------------------------------------ Chrome / stats */
   function chrome(show) { topbar.hidden = !show; tabbar.hidden = !show; }
 
+  /* Per-browser-session "who's playing" gate. The active profile persists in
+     localStorage, but each new browser session must re-pick (or create) a
+     learner before the app opens — tracked in sessionStorage (cleared when the
+     tab/session ends). Falls back to an in-memory flag where storage is absent. */
+  var SESSION_KEY = "lsv:session";
+  var _sessionId = null;
+  function getSessionId() {
+    if (_sessionId) return _sessionId;
+    try { _sessionId = sessionStorage.getItem(SESSION_KEY) || null; } catch (e) {}
+    return _sessionId;
+  }
+  function setSessionId(id) {
+    _sessionId = id;
+    try { sessionStorage.setItem(SESSION_KEY, id); } catch (e) {}
+  }
+  function sessionReady() {
+    var id = getSessionId();
+    return !!(id && LSV.profiles.get(id));
+  }
+
   function localizeChrome() {
     [["learn", "tab_learn"], ["practice", "tab_practice"], ["culture", "tab_culture"], ["phrasebook", "tab_phrases"]]
       .forEach(function (p) {
@@ -51,11 +85,17 @@
       });
     var ab = U.qs("#profile-btn");
     if (ab) {
-      var p = LSV.profiles.active();
-      var name = (p && p.name) || "";
-      ab.textContent = LSV.profiles.initials(name);
-      ab.setAttribute("aria-label", name ? I18N.t("settings_title") + " — " + name : I18N.t("settings_title"));
+      var ap = LSV.profiles.active();
+      var apName = (ap && ap.name) || "";
+      ab.textContent = LSV.profiles.initials(apName);
+      ab.setAttribute("aria-label", apName ? I18N.t("settings_title") + " — " + apName : I18N.t("settings_title"));
     }
+    // Chrome that depends on the active target (L2).
+    var tg = I18N.targets[I18N.L2] || {};
+    var brand = U.qs(".topbar__moose"); if (brand) brand.textContent = tg.mascot || "🫎";
+    var title = U.qs(".topbar__title"); if (title) title.textContent = tg.endonym || "";
+    var cult = U.qs('.tab[data-tab="culture"] .tab__icon'); if (cult) cult.textContent = tg.flag || "🌐";
+    if (D.course && D.course.title) document.title = D.course.title;
   }
 
   function updateStats() {
@@ -81,7 +121,8 @@
   /* ================================================ ONBOARDING =========== */
   function viewWelcome() {
     chrome(false);
-    var flags = I18N.langList().map(function (l) { return l.flag; }).join(" ") + " → 🇸🇪";
+    var tgt = I18N.targets[I18N.L2];
+    var flags = I18N.langList().map(function (l) { return l.flag; }).join(" ") + " → " + (tgt ? tgt.flag : "🌍");
     var scr = U.el("div", { class: "onboard onboard--center fadein" }, [
       U.el("div", { class: "onboard__flags", text: flags }),
       moose("mascot--lg"),
@@ -132,11 +173,10 @@
     return group;
   }
 
-  /* Reusable L1/L2 picker (only L1 is actually choosable today — there's a
-     single target language, Swedish). Returns the group elements plus a
-     getter for the currently chosen L1 code. */
-  function buildLangPicker(initialL1) {
-    var chosenL1 = initialL1;
+  /* Reusable L1 + L2 (target) pickers. Returns the two group elements plus
+     getters for the currently chosen codes. */
+  function buildLangPicker(initialL1, initialL2) {
+    var chosenL1 = initialL1, chosenL2 = initialL2;
 
     var l1group = U.el("div", { class: "setup-group" }, [U.el("div", { class: "setup-group__label", text: I18N.t("setup_l1") })]);
     I18N.langList().forEach(function (lang) {
@@ -158,19 +198,24 @@
 
     var l2group = U.el("div", { class: "setup-group" }, [U.el("div", { class: "setup-group__label", text: I18N.t("setup_l2") })]);
     I18N.targetList().forEach(function (tg) {
-      var opt = U.el("button", { class: "lang-option is-selected", type: "button" }, [
+      var opt = U.el("button", { class: "lang-option" + (tg.code === chosenL2 ? " is-selected" : ""), type: "button" }, [
         U.el("span", { class: "lang-option__flag", text: tg.flag }),
         U.el("span", { class: "lang-option__meta" }, [
           U.el("span", { text: tg.endonym }),
           U.el("span", { class: "lang-option__sub", text: tg.name })
         ]),
-        U.el("span", { class: "lang-option__check", text: "✓" })
+        U.el("span", { class: "lang-option__check", text: tg.code === chosenL2 ? "✓" : "" })
       ]);
+      opt.addEventListener("click", function () {
+        chosenL2 = tg.code;
+        U.qsa(".lang-option", l2group).forEach(function (o) { o.classList.remove("is-selected"); o.querySelector(".lang-option__check").textContent = ""; });
+        opt.classList.add("is-selected"); opt.querySelector(".lang-option__check").textContent = "✓";
+      });
       l2group.appendChild(opt);
     });
     l2group.appendChild(U.el("div", { class: "muted", text: I18N.t("setup_l2_note") }));
 
-    return { l1group: l1group, l2group: l2group, getL1: function () { return chosenL1; } };
+    return { l1group: l1group, l2group: l2group, getL1: function () { return chosenL1; }, getL2: function () { return chosenL2; } };
   }
 
   function nameInputGroup(initialName) {
@@ -190,18 +235,22 @@
     ]);
     if (isNew) {
       var x = U.el("button", { class: "setup-close", text: "✕", "aria-label": I18N.t("setup_close") });
-      x.addEventListener("click", function () { location.hash = "#/setup"; });
+      // Close returns to Settings when already in a session, or to the
+      // session profile-picker when adding a user from the picker gate.
+      x.addEventListener("click", function () { location.hash = sessionReady() ? "#/setup" : "#/"; });
       head.appendChild(x);
     }
 
     var name = nameInputGroup("");
-    var picker = buildLangPicker(I18N.L1 || "en");
+    var picker = buildLangPicker(I18N.L1 || "en", I18N.L2 || "sv");
 
     var confirm = U.el("button", { class: "btn", text: I18N.t("setup_btn") });
     confirm.addEventListener("click", function () {
       var n = name.input.value.trim();
       if (!n) { name.input.classList.add("text-input--error"); name.input.focus(); return; }
-      I18N.completeOnboarding(n, picker.getL1(), "sv");
+      I18N.completeOnboarding(n, picker.getL1(), picker.getL2());
+      setSessionId(LSV.profiles.activeId());
+      applyTarget();
       P.reload();
       localizeChrome();
       if (isNew) toast(I18N.t("toast_profile_switched", { name: n }));
@@ -231,6 +280,8 @@
 
     function switchTo(id, name) {
       I18N.switchProfile(id);
+      setSessionId(id);
+      applyTarget();
       P.reload();
       localizeChrome();
       toast(I18N.t("toast_profile_switched", { name: name || I18N.t("profile_unnamed") }));
@@ -257,28 +308,28 @@
 
     var name = nameInputGroup(activeProfile ? activeProfile.name : "");
     name.input.addEventListener("change", function () {
-      var n = name.input.value.trim();
-      LSV.profiles.update(activeId, { name: n });
+      LSV.profiles.update(activeId, { name: name.input.value.trim() });
       localizeChrome();
     });
 
-    var picker = buildLangPicker(I18N.L1 || "en");
+    var picker = buildLangPicker(I18N.L1 || "en", I18N.L2 || "sv");
 
     var confirm = U.el("button", { class: "btn", text: I18N.t("settings_save_btn") });
     confirm.addEventListener("click", function () {
-      var n = name.input.value.trim();
-      LSV.profiles.update(activeId, { name: n });
+      LSV.profiles.update(activeId, { name: name.input.value.trim() });
       I18N.setL1(picker.getL1());
-      I18N.setL2("sv");
+      I18N.setL2(picker.getL2());
+      applyTarget();
+      P.reload();
       localizeChrome();
       if (location.hash === "#/" || location.hash === "") render();
       else location.hash = "#/";
     });
 
-    var groups = [head, profGroup, name.group, picker.l1group, picker.l2group, viewOfflineGroup(),
-      U.el("div", { class: "onboard__footer" }, [confirm])];
-
-    var scr = U.el("div", { class: "onboard fadein" }, groups);
+    var scr = U.el("div", { class: "onboard fadein" }, [
+      head, profGroup, name.group, picker.l1group, picker.l2group, viewOfflineGroup(),
+      U.el("div", { class: "onboard__footer" }, [confirm])
+    ]);
 
     var resetBtn = U.el("button", { class: "btn btn--red btn--sm", text: I18N.t("settings_reset_btn") });
     resetBtn.addEventListener("click", function () {
@@ -301,6 +352,44 @@
     if (!I18N.isOnboarded()) return viewProfileForm(false);
     if (location.hash === "#/setup/new") return viewProfileForm(true);
     return viewSettings();
+  }
+
+  /* Adopt a profile for this browser session, then open the app. */
+  function selectProfile(id) {
+    I18N.switchProfile(id);
+    setSessionId(id);
+    applyTarget();
+    P.reload();
+    localizeChrome();
+    if (location.hash === "#/" || location.hash === "") render();
+    else location.hash = "#/";
+  }
+
+  /* Session gate shown when profiles already exist but this browser session
+     hasn't picked one yet: choose an existing learner or create a new one. */
+  function viewProfilePicker() {
+    chrome(false);
+    var head = U.el("div", { class: "setup-head" }, [U.el("h1", { text: I18N.t("picker_title") })]);
+
+    var list = U.el("div", { class: "setup-group" }, [U.el("div", { class: "setup-group__label", text: I18N.t("picker_choose") })]);
+    LSV.profiles.list().forEach(function (p) {
+      var row = U.el("button", { class: "profile-row", type: "button" }, [
+        U.el("div", { class: "profile-row__avatar", text: LSV.profiles.initials(p.name) }),
+        U.el("div", { class: "profile-row__name", text: p.name || I18N.t("profile_unnamed") }),
+        U.el("span", { class: "profile-row__go", text: "›" })
+      ]);
+      row.addEventListener("click", function () { selectProfile(p.id); });
+      list.appendChild(row);
+    });
+
+    var addBtn = U.el("button", { class: "btn btn--blue", text: I18N.t("picker_add_btn") });
+    addBtn.addEventListener("click", function () { location.hash = "#/setup/new"; });
+
+    var scr = U.el("div", { class: "onboard fadein" }, [
+      head, list, U.el("div", { class: "onboard__footer" }, [addBtn])
+    ]);
+    U.clear(view).appendChild(scr);
+    window.scrollTo(0, 0);
   }
 
   /* ================================================ VIEWS ================ */
@@ -400,7 +489,7 @@
           U.el("div", { class: "card__emoji", text: c.emoji }),
           U.el("div", {}, [
             U.el("div", { class: "card__title", text: I18N.cultureTitle(c.id) }),
-            U.el("div", { class: "card__sub", text: c.sv })
+            U.el("div", { class: "card__sub", text: c.l2 })
           ])
         ]),
         U.el("div", { class: "card__body", html: I18N.cultureBody(c.id) })
@@ -433,7 +522,7 @@
         root.appendChild(U.el("div", { class: "vrow" }, [
           U.el("div", { class: "vrow__emoji", text: w.img }),
           U.el("div", { class: "vrow__text" }, [
-            U.el("div", { class: "vrow__sv", text: w.sv }),
+            U.el("div", { class: "vrow__sv", text: w.l2 }),
             U.el("div", { class: "ipa", text: "[" + w.ipa + "]" }),
             U.el("div", { class: "vrow__en", text: w.t })
           ]),
@@ -473,7 +562,7 @@
         body.appendChild(U.el("div", { class: "vrow" }, [
           U.el("div", { class: "vrow__emoji", text: w.img }),
           U.el("div", { class: "vrow__text" }, [
-            U.el("div", { class: "vrow__sv", text: w.sv }),
+            U.el("div", { class: "vrow__sv", text: w.l2 }),
             U.el("div", { class: "ipa", text: "[" + w.ipa + "]" }),
             U.el("div", { class: "vrow__en", text: w.t })
           ]),
@@ -665,6 +754,14 @@
       if (hash === "#/setup" || hash === "#/setup/new") return viewSetup();
       return viewWelcome();
     }
+
+    // Profiles exist, but a fresh browser session must pick (or create) a
+    // learner before the app opens.
+    if (!sessionReady()) {
+      if (hash === "#/setup/new") return viewProfileForm(true);
+      return viewProfilePicker();
+    }
+
     if (hash === "#/setup" || hash === "#/setup/new") return viewSetup();
 
     P.setRoute(hash);

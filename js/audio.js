@@ -1,7 +1,9 @@
-/* audio.js — plays Swedish audio.
+/* audio.js — plays target-language (L2) audio.
    Strategy:
-     1. If assets/audio/sv/<id>.mp3 exists, play it (best quality, your recordings).
-     2. Otherwise fall back to the browser's Swedish speech synthesis (sv-SE).
+     1. If assets/audio/<L2>/<id>.mp3 exists, play it (best quality, your recordings).
+     2. Otherwise fall back to the browser's L2 speech synthesis.
+   The audio folder and the speech language both come from the active target
+   (LSV.i18n.L2 + targets[L2].bcp47), so nothing here is tied to one language.
    Also provides short WebAudio "correct/wrong" sound effects (no asset files). */
 (function () {
   "use strict";
@@ -9,32 +11,46 @@
 
   var fileCache = {};  // id -> HTMLAudioElement | false (known-missing)
   var EXTS = ["mp3", "wav"];   // prefer mp3, fall back to wav (OmniVoice output)
-  var svVoice = null;
-  var voicesReady = false;
+  var voiceCache = {};         // lang tag -> SpeechSynthesisVoice | null
 
-  function pickSwedishVoice() {
+  function i18n() { return LSV.i18n || {}; }
+
+  /* Active target's audio folder, e.g. "assets/audio/sv/" or "assets/audio/ca/". */
+  function audioDir() { return "assets/audio/" + (i18n().L2 || "sv") + "/"; }
+
+  /* Active target's speech-synthesis language tag, e.g. "sv-SE", "ca-ES". */
+  function ttsLang() {
+    var I = i18n(), code = I.L2 || "sv";
+    var t = I.targets && I.targets[code];
+    return (t && t.bcp47) || code;
+  }
+
+  function pickVoice(langTag) {
     if (!("speechSynthesis" in window)) return null;
+    var full = String(langTag || "").toLowerCase();
+    var base = full.split("-")[0];
     var voices = window.speechSynthesis.getVoices() || [];
-    // Prefer an explicitly Swedish voice.
-    var sv = voices.filter(function (v) { return /sv(-|_)?SE|swedish|svenska/i.test(v.lang + " " + v.name); });
-    if (!sv.length) sv = voices.filter(function (v) { return /^sv\b/i.test(v.lang); });
-    return sv[0] || null;
+    var m = voices.filter(function (v) {
+      var l = String(v.lang || "").replace("_", "-").toLowerCase();
+      return l === full || l.split("-")[0] === base;
+    });
+    return m[0] || null;
   }
 
   if ("speechSynthesis" in window) {
-    var load = function () { svVoice = pickSwedishVoice(); voicesReady = true; };
-    load();
-    window.speechSynthesis.addEventListener("voiceschanged", load);
+    // Voices load asynchronously; drop the cache so the next speak() re-picks.
+    window.speechSynthesis.addEventListener("voiceschanged", function () { voiceCache = {}; });
   }
 
   function speak(text) {
     if (!("speechSynthesis" in window)) return false;
     try {
       window.speechSynthesis.cancel();
+      var lang = ttsLang();
       var u = new SpeechSynthesisUtterance(text);
-      u.lang = "sv-SE";
-      if (!svVoice) svVoice = pickSwedishVoice();
-      if (svVoice) u.voice = svVoice;
+      u.lang = lang;
+      if (!(lang in voiceCache)) voiceCache[lang] = pickVoice(lang);
+      if (voiceCache[lang]) u.voice = voiceCache[lang];
       u.rate = 0.9;
       window.speechSynthesis.speak(u);
       return true;
@@ -49,16 +65,17 @@
     });
   }
 
-  /* Try assets/audio/sv/<id>.mp3, then .wav. Resolves on the first that plays. */
+  /* Try assets/audio/<L2>/<id>.mp3, then .wav. Resolves on the first that plays. */
   function playFile(id) {
     return new Promise(function (resolve, reject) {
       if (fileCache[id] === false) return reject();
       if (fileCache[id]) return playCached(fileCache[id]).then(resolve, reject);
 
+      var dir = audioDir();
       var idx = 0;
       (function attempt() {
         if (idx >= EXTS.length) { fileCache[id] = false; return reject(); }
-        var a = new Audio("assets/audio/sv/" + id + "." + EXTS[idx++]);
+        var a = new Audio(dir + id + "." + EXTS[idx++]);
         a.preload = "auto";
         var settled = false;
         a.onerror = function () { if (!settled) { settled = true; attempt(); } };
@@ -77,10 +94,10 @@
     /* Play a vocab item by id (mp3 first, then speech synthesis). */
     play: function (id) {
       var w = LSV.data.vocab[id];
-      var text = w ? w.sv : id;
+      var text = w ? w.l2 : id;
       playFile(id).catch(function () { speak(text); });
     },
-    /* Speak arbitrary Swedish text (used by phrasebook etc.) */
+    /* Speak arbitrary L2 text (used by phrasebook etc.) */
     say: function (text) { speak(text); },
 
     /* Does the browser have any way to produce audio? */

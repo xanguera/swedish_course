@@ -69,13 +69,17 @@
     settings_reset_confirm: "Repor todo o progresso? Isto apaga para sempre as tuas lições, XP, sequência e palavras guardadas.",
     settings_reset_done: "Progresso reposto",
 
-    // perfis de família — um dispositivo, vários aprendizes, cada um com o
-    // seu nome, par de idiomas e progresso (guardado localmente, não partilhado)
+    // perfis de aprendiz (vários membros da família por dispositivo)
     profile_section_label: "Membros da família neste dispositivo",
     profile_unnamed: "Sem nome",
     profile_add_btn: "+ Adicionar familiar",
     profile_add_title: "Adicionar um familiar",
     toast_profile_switched: "Mudou para {name}",
+
+    // seletor de perfil da sessão ("quem está a jogar")
+    picker_title: "Quem está a aprender?",
+    picker_choose: "Escolhe o teu perfil",
+    picker_add_btn: "+ Novo utilizador",
 
     // offline
     offline_title: "Offline",
@@ -90,7 +94,7 @@
 
   var t = function (t, note) { return { t: t, note: note || "" }; };
 
-  I.registerContent("pt", {
+  I.registerContent("pt", "sv", {
     vocab: {
       // Unit 1
       hej: t("olá", "A saudação para qualquer altura do dia."),

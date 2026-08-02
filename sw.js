@@ -5,7 +5,7 @@
    for full offline readiness ahead of a trip. */
 "use strict";
 
-var CACHE_VERSION = "lsv-v2";
+var CACHE_VERSION = "lsv-v4";
 var STATIC_CACHE = CACHE_VERSION + "-static";
 var RUNTIME_CACHE = CACHE_VERSION + "-runtime";
 
@@ -15,17 +15,28 @@ var APP_SHELL = [
   "manifest.json",
   "css/styles.css",
   "js/util.js",
+  "js/profiles.js",
   "js/i18n.js",
+  "js/coredata.js",
   "js/audio.js",
   "js/progress.js",
   "js/exercises.js",
   "js/app.js",
+  // Swedish (sv) course
   "data/vocab.js",
   "data/culture.js",
   "data/lessons.js",
   "data/course.js",
+  // Catalan (ca) course
+  "data/vocab_ca.js",
+  "data/culture_ca.js",
+  "data/lessons_ca.js",
+  "data/course_ca.js",
+  // Language packs
   "data/i18n_en.js",
   "data/i18n_pt.js",
+  "data/i18n_ca.js",
+  "data/i18n_ca_pt.js",
   "assets/icons/icon-192.png",
   "assets/icons/icon-512.png",
   "assets/icons/apple-touch-icon.png"
