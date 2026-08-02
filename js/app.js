@@ -64,6 +64,12 @@
         if (el) el.textContent = I18N.t(p[1]);
       });
     var lb = U.qs("#lang-btn"); if (lb) lb.textContent = I18N.currentFlag();
+    // Chrome that depends on the active target (L2).
+    var tg = I18N.targets[I18N.L2] || {};
+    var brand = U.qs(".topbar__moose"); if (brand) brand.textContent = tg.mascot || "🫎";
+    var title = U.qs(".topbar__title"); if (title) title.textContent = tg.endonym || "";
+    var cult = U.qs('.tab[data-tab="culture"] .tab__icon'); if (cult) cult.textContent = tg.flag || "🌐";
+    if (D.course && D.course.title) document.title = D.course.title;
   }
 
   function updateStats() {
