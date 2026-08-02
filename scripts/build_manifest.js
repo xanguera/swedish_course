@@ -9,7 +9,8 @@ const path = require("path");
 global.window = {};
 global.LSV = { data: {} };
 require(path.join(__dirname, "..", "js", "coredata.js"));
-require(path.join(__dirname, "..", "data", "vocab.js"));
+// Every course's vocab (one file per target, each registers under its code).
+["vocab", "vocab_ca"].forEach((f) => require(path.join(__dirname, "..", "data", f + ".js")));
 
 const courses = global.LSV.data.courses;
 const list = [];

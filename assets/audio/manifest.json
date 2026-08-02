@@ -656,5 +656,663 @@
     "l2": "Kan jag ta ett foto?",
     "en": "Can I take a photo?",
     "file": "assets/audio/sv/kan_jag_ta_ett_foto.mp3"
+  },
+  {
+    "id": "hola",
+    "target": "ca",
+    "l2": "hola",
+    "en": "hi / hello",
+    "file": "assets/audio/ca/hola.mp3"
+  },
+  {
+    "id": "bon_dia",
+    "target": "ca",
+    "l2": "bon dia",
+    "en": "good morning / good day",
+    "file": "assets/audio/ca/bon_dia.mp3"
+  },
+  {
+    "id": "bona_tarda",
+    "target": "ca",
+    "l2": "bona tarda",
+    "en": "good afternoon",
+    "file": "assets/audio/ca/bona_tarda.mp3"
+  },
+  {
+    "id": "adeu",
+    "target": "ca",
+    "l2": "adéu",
+    "en": "goodbye",
+    "file": "assets/audio/ca/adeu.mp3"
+  },
+  {
+    "id": "gracies",
+    "target": "ca",
+    "l2": "gràcies",
+    "en": "thank you",
+    "file": "assets/audio/ca/gracies.mp3"
+  },
+  {
+    "id": "moltes_gracies",
+    "target": "ca",
+    "l2": "moltes gràcies",
+    "en": "thank you very much",
+    "file": "assets/audio/ca/moltes_gracies.mp3"
+  },
+  {
+    "id": "de_res",
+    "target": "ca",
+    "l2": "de res",
+    "en": "you're welcome",
+    "file": "assets/audio/ca/de_res.mp3"
+  },
+  {
+    "id": "si",
+    "target": "ca",
+    "l2": "sí",
+    "en": "yes",
+    "file": "assets/audio/ca/si.mp3"
+  },
+  {
+    "id": "no",
+    "target": "ca",
+    "l2": "no",
+    "en": "no",
+    "file": "assets/audio/ca/no.mp3"
+  },
+  {
+    "id": "perdo",
+    "target": "ca",
+    "l2": "perdó",
+    "en": "sorry / excuse me",
+    "file": "assets/audio/ca/perdo.mp3"
+  },
+  {
+    "id": "perdoni",
+    "target": "ca",
+    "l2": "perdoni",
+    "en": "excuse me (polite)",
+    "file": "assets/audio/ca/perdoni.mp3"
+  },
+  {
+    "id": "si_us_plau",
+    "target": "ca",
+    "l2": "si us plau",
+    "en": "please",
+    "file": "assets/audio/ca/si_us_plau.mp3"
+  },
+  {
+    "id": "parla_angles",
+    "target": "ca",
+    "l2": "Parla anglès?",
+    "en": "Do you speak English?",
+    "file": "assets/audio/ca/parla_angles.mp3"
+  },
+  {
+    "id": "no_ho_entenc",
+    "target": "ca",
+    "l2": "No ho entenc",
+    "en": "I don't understand",
+    "file": "assets/audio/ca/no_ho_entenc.mp3"
+  },
+  {
+    "id": "em_dic",
+    "target": "ca",
+    "l2": "Em dic…",
+    "en": "My name is…",
+    "file": "assets/audio/ca/em_dic.mp3"
+  },
+  {
+    "id": "jo",
+    "target": "ca",
+    "l2": "jo",
+    "en": "I",
+    "file": "assets/audio/ca/jo.mp3"
+  },
+  {
+    "id": "tu",
+    "target": "ca",
+    "l2": "tu",
+    "en": "you",
+    "file": "assets/audio/ca/tu.mp3"
+  },
+  {
+    "id": "ell",
+    "target": "ca",
+    "l2": "ell",
+    "en": "he",
+    "file": "assets/audio/ca/ell.mp3"
+  },
+  {
+    "id": "ella",
+    "target": "ca",
+    "l2": "ella",
+    "en": "she",
+    "file": "assets/audio/ca/ella.mp3"
+  },
+  {
+    "id": "com_et_dius",
+    "target": "ca",
+    "l2": "Com et dius?",
+    "en": "What's your name?",
+    "file": "assets/audio/ca/com_et_dius.mp3"
+  },
+  {
+    "id": "mare",
+    "target": "ca",
+    "l2": "mare",
+    "en": "mother",
+    "file": "assets/audio/ca/mare.mp3"
+  },
+  {
+    "id": "pare",
+    "target": "ca",
+    "l2": "pare",
+    "en": "father",
+    "file": "assets/audio/ca/pare.mp3"
+  },
+  {
+    "id": "germana",
+    "target": "ca",
+    "l2": "germana",
+    "en": "sister",
+    "file": "assets/audio/ca/germana.mp3"
+  },
+  {
+    "id": "germa",
+    "target": "ca",
+    "l2": "germà",
+    "en": "brother",
+    "file": "assets/audio/ca/germa.mp3"
+  },
+  {
+    "id": "familia",
+    "target": "ca",
+    "l2": "família",
+    "en": "family",
+    "file": "assets/audio/ca/familia.mp3"
+  },
+  {
+    "id": "com_estas",
+    "target": "ca",
+    "l2": "Com estàs?",
+    "en": "How are you?",
+    "file": "assets/audio/ca/com_estas.mp3"
+  },
+  {
+    "id": "molt_be",
+    "target": "ca",
+    "l2": "molt bé",
+    "en": "very well / great",
+    "file": "assets/audio/ca/molt_be.mp3"
+  },
+  {
+    "id": "don_ets",
+    "target": "ca",
+    "l2": "D'on ets?",
+    "en": "Where are you from?",
+    "file": "assets/audio/ca/don_ets.mp3"
+  },
+  {
+    "id": "soc_de",
+    "target": "ca",
+    "l2": "Sóc de…",
+    "en": "I'm from…",
+    "file": "assets/audio/ca/soc_de.mp3"
+  },
+  {
+    "id": "zero",
+    "target": "ca",
+    "l2": "zero",
+    "en": "zero",
+    "file": "assets/audio/ca/zero.mp3"
+  },
+  {
+    "id": "u",
+    "target": "ca",
+    "l2": "u",
+    "en": "one",
+    "file": "assets/audio/ca/u.mp3"
+  },
+  {
+    "id": "dos",
+    "target": "ca",
+    "l2": "dos",
+    "en": "two",
+    "file": "assets/audio/ca/dos.mp3"
+  },
+  {
+    "id": "tres",
+    "target": "ca",
+    "l2": "tres",
+    "en": "three",
+    "file": "assets/audio/ca/tres.mp3"
+  },
+  {
+    "id": "quatre",
+    "target": "ca",
+    "l2": "quatre",
+    "en": "four",
+    "file": "assets/audio/ca/quatre.mp3"
+  },
+  {
+    "id": "cinc",
+    "target": "ca",
+    "l2": "cinc",
+    "en": "five",
+    "file": "assets/audio/ca/cinc.mp3"
+  },
+  {
+    "id": "sis",
+    "target": "ca",
+    "l2": "sis",
+    "en": "six",
+    "file": "assets/audio/ca/sis.mp3"
+  },
+  {
+    "id": "set",
+    "target": "ca",
+    "l2": "set",
+    "en": "seven",
+    "file": "assets/audio/ca/set.mp3"
+  },
+  {
+    "id": "vuit",
+    "target": "ca",
+    "l2": "vuit",
+    "en": "eight",
+    "file": "assets/audio/ca/vuit.mp3"
+  },
+  {
+    "id": "nou",
+    "target": "ca",
+    "l2": "nou",
+    "en": "nine",
+    "file": "assets/audio/ca/nou.mp3"
+  },
+  {
+    "id": "deu",
+    "target": "ca",
+    "l2": "deu",
+    "en": "ten",
+    "file": "assets/audio/ca/deu.mp3"
+  },
+  {
+    "id": "onze",
+    "target": "ca",
+    "l2": "onze",
+    "en": "eleven",
+    "file": "assets/audio/ca/onze.mp3"
+  },
+  {
+    "id": "dotze",
+    "target": "ca",
+    "l2": "dotze",
+    "en": "twelve",
+    "file": "assets/audio/ca/dotze.mp3"
+  },
+  {
+    "id": "tretze",
+    "target": "ca",
+    "l2": "tretze",
+    "en": "thirteen",
+    "file": "assets/audio/ca/tretze.mp3"
+  },
+  {
+    "id": "catorze",
+    "target": "ca",
+    "l2": "catorze",
+    "en": "fourteen",
+    "file": "assets/audio/ca/catorze.mp3"
+  },
+  {
+    "id": "quinze",
+    "target": "ca",
+    "l2": "quinze",
+    "en": "fifteen",
+    "file": "assets/audio/ca/quinze.mp3"
+  },
+  {
+    "id": "setze",
+    "target": "ca",
+    "l2": "setze",
+    "en": "sixteen",
+    "file": "assets/audio/ca/setze.mp3"
+  },
+  {
+    "id": "disset",
+    "target": "ca",
+    "l2": "disset",
+    "en": "seventeen",
+    "file": "assets/audio/ca/disset.mp3"
+  },
+  {
+    "id": "divuit",
+    "target": "ca",
+    "l2": "divuit",
+    "en": "eighteen",
+    "file": "assets/audio/ca/divuit.mp3"
+  },
+  {
+    "id": "dinou",
+    "target": "ca",
+    "l2": "dinou",
+    "en": "nineteen",
+    "file": "assets/audio/ca/dinou.mp3"
+  },
+  {
+    "id": "vint",
+    "target": "ca",
+    "l2": "vint",
+    "en": "twenty",
+    "file": "assets/audio/ca/vint.mp3"
+  },
+  {
+    "id": "trenta",
+    "target": "ca",
+    "l2": "trenta",
+    "en": "thirty",
+    "file": "assets/audio/ca/trenta.mp3"
+  },
+  {
+    "id": "quaranta",
+    "target": "ca",
+    "l2": "quaranta",
+    "en": "forty",
+    "file": "assets/audio/ca/quaranta.mp3"
+  },
+  {
+    "id": "cent",
+    "target": "ca",
+    "l2": "cent",
+    "en": "one hundred",
+    "file": "assets/audio/ca/cent.mp3"
+  },
+  {
+    "id": "quant_costa",
+    "target": "ca",
+    "l2": "Quant costa?",
+    "en": "How much is it?",
+    "file": "assets/audio/ca/quant_costa.mp3"
+  },
+  {
+    "id": "euros",
+    "target": "ca",
+    "l2": "euros",
+    "en": "euros",
+    "file": "assets/audio/ca/euros.mp3"
+  },
+  {
+    "id": "car",
+    "target": "ca",
+    "l2": "car",
+    "en": "expensive",
+    "file": "assets/audio/ca/car.mp3"
+  },
+  {
+    "id": "barat",
+    "target": "ca",
+    "l2": "barat",
+    "en": "cheap",
+    "file": "assets/audio/ca/barat.mp3"
+  },
+  {
+    "id": "voldria",
+    "target": "ca",
+    "l2": "voldria",
+    "en": "I would like",
+    "file": "assets/audio/ca/voldria.mp3"
+  },
+  {
+    "id": "un",
+    "target": "ca",
+    "l2": "un",
+    "en": "a / one (masc.)",
+    "file": "assets/audio/ca/un.mp3"
+  },
+  {
+    "id": "una",
+    "target": "ca",
+    "l2": "una",
+    "en": "a / one (fem.)",
+    "file": "assets/audio/ca/una.mp3"
+  },
+  {
+    "id": "aixo",
+    "target": "ca",
+    "l2": "això",
+    "en": "this",
+    "file": "assets/audio/ca/aixo.mp3"
+  },
+  {
+    "id": "cafe",
+    "target": "ca",
+    "l2": "cafè",
+    "en": "coffee",
+    "file": "assets/audio/ca/cafe.mp3"
+  },
+  {
+    "id": "tallat",
+    "target": "ca",
+    "l2": "tallat",
+    "en": "espresso with a little milk",
+    "file": "assets/audio/ca/tallat.mp3"
+  },
+  {
+    "id": "cafe_amb_llet",
+    "target": "ca",
+    "l2": "cafè amb llet",
+    "en": "coffee with milk",
+    "file": "assets/audio/ca/cafe_amb_llet.mp3"
+  },
+  {
+    "id": "canya",
+    "target": "ca",
+    "l2": "canya",
+    "en": "small draught beer",
+    "file": "assets/audio/ca/canya.mp3"
+  },
+  {
+    "id": "croissant",
+    "target": "ca",
+    "l2": "croissant",
+    "en": "croissant",
+    "file": "assets/audio/ca/croissant.mp3"
+  },
+  {
+    "id": "un_cafe_si_us_plau",
+    "target": "ca",
+    "l2": "Un cafè, si us plau",
+    "en": "A coffee, please",
+    "file": "assets/audio/ca/un_cafe_si_us_plau.mp3"
+  },
+  {
+    "id": "per_emportar",
+    "target": "ca",
+    "l2": "per emportar",
+    "en": "to take away",
+    "file": "assets/audio/ca/per_emportar.mp3"
+  },
+  {
+    "id": "esmorzar",
+    "target": "ca",
+    "l2": "esmorzar",
+    "en": "breakfast",
+    "file": "assets/audio/ca/esmorzar.mp3"
+  },
+  {
+    "id": "dinar",
+    "target": "ca",
+    "l2": "dinar",
+    "en": "lunch",
+    "file": "assets/audio/ca/dinar.mp3"
+  },
+  {
+    "id": "sopar",
+    "target": "ca",
+    "l2": "sopar",
+    "en": "dinner",
+    "file": "assets/audio/ca/sopar.mp3"
+  },
+  {
+    "id": "aigua",
+    "target": "ca",
+    "l2": "aigua",
+    "en": "water",
+    "file": "assets/audio/ca/aigua.mp3"
+  },
+  {
+    "id": "vi",
+    "target": "ca",
+    "l2": "vi",
+    "en": "wine",
+    "file": "assets/audio/ca/vi.mp3"
+  },
+  {
+    "id": "el_compte",
+    "target": "ca",
+    "l2": "el compte",
+    "en": "the bill",
+    "file": "assets/audio/ca/el_compte.mp3"
+  },
+  {
+    "id": "bon_profit",
+    "target": "ca",
+    "l2": "bon profit",
+    "en": "enjoy your meal",
+    "file": "assets/audio/ca/bon_profit.mp3"
+  },
+  {
+    "id": "metro",
+    "target": "ca",
+    "l2": "metro",
+    "en": "metro / subway",
+    "file": "assets/audio/ca/metro.mp3"
+  },
+  {
+    "id": "autobus",
+    "target": "ca",
+    "l2": "autobús",
+    "en": "bus",
+    "file": "assets/audio/ca/autobus.mp3"
+  },
+  {
+    "id": "tren",
+    "target": "ca",
+    "l2": "tren",
+    "en": "train",
+    "file": "assets/audio/ca/tren.mp3"
+  },
+  {
+    "id": "tramvia",
+    "target": "ca",
+    "l2": "tramvia",
+    "en": "tram",
+    "file": "assets/audio/ca/tramvia.mp3"
+  },
+  {
+    "id": "bitllet",
+    "target": "ca",
+    "l2": "bitllet",
+    "en": "ticket",
+    "file": "assets/audio/ca/bitllet.mp3"
+  },
+  {
+    "id": "on_es",
+    "target": "ca",
+    "l2": "On és…?",
+    "en": "Where is…?",
+    "file": "assets/audio/ca/on_es.mp3"
+  },
+  {
+    "id": "a",
+    "target": "ca",
+    "l2": "a",
+    "en": "to",
+    "file": "assets/audio/ca/a.mp3"
+  },
+  {
+    "id": "de",
+    "target": "ca",
+    "l2": "de",
+    "en": "from / of",
+    "file": "assets/audio/ca/de.mp3"
+  },
+  {
+    "id": "dreta",
+    "target": "ca",
+    "l2": "dreta",
+    "en": "right",
+    "file": "assets/audio/ca/dreta.mp3"
+  },
+  {
+    "id": "esquerra",
+    "target": "ca",
+    "l2": "esquerra",
+    "en": "left",
+    "file": "assets/audio/ca/esquerra.mp3"
+  },
+  {
+    "id": "tot_recte",
+    "target": "ca",
+    "l2": "tot recte",
+    "en": "straight ahead",
+    "file": "assets/audio/ca/tot_recte.mp3"
+  },
+  {
+    "id": "barri_gotic",
+    "target": "ca",
+    "l2": "Barri Gòtic",
+    "en": "the Gothic Quarter",
+    "file": "assets/audio/ca/barri_gotic.mp3"
+  },
+  {
+    "id": "sagrada_familia",
+    "target": "ca",
+    "l2": "Sagrada Família",
+    "en": "the Sagrada Família",
+    "file": "assets/audio/ca/sagrada_familia.mp3"
+  },
+  {
+    "id": "museu",
+    "target": "ca",
+    "l2": "museu",
+    "en": "museum",
+    "file": "assets/audio/ca/museu.mp3"
+  },
+  {
+    "id": "mercat",
+    "target": "ca",
+    "l2": "mercat",
+    "en": "market",
+    "file": "assets/audio/ca/mercat.mp3"
+  },
+  {
+    "id": "placa",
+    "target": "ca",
+    "l2": "plaça",
+    "en": "square",
+    "file": "assets/audio/ca/placa.mp3"
+  },
+  {
+    "id": "horari",
+    "target": "ca",
+    "l2": "horari",
+    "en": "opening hours",
+    "file": "assets/audio/ca/horari.mp3"
+  },
+  {
+    "id": "on_es_el_lavabo",
+    "target": "ca",
+    "l2": "On és el lavabo?",
+    "en": "Where is the toilet?",
+    "file": "assets/audio/ca/on_es_el_lavabo.mp3"
+  },
+  {
+    "id": "puc_fer_una_foto",
+    "target": "ca",
+    "l2": "Puc fer una foto?",
+    "en": "Can I take a photo?",
+    "file": "assets/audio/ca/puc_fer_una_foto.mp3"
   }
 ]

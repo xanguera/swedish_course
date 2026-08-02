@@ -18,6 +18,15 @@
   function moose(cls) {
     var wrap = U.el("div");
     wrap.className = "mascot " + (cls || "");
+    // Per-target mascot: emoji from the registry (e.g. Catalan 🐉), else the built-in moose SVG (sv).
+    var tg = I18N.targets[I18N.L2] || {};
+    if (tg.mascot) {
+      wrap.setAttribute("role", "img");
+      wrap.setAttribute("aria-label", tg.mascotName || "mascot");
+      wrap.textContent = tg.mascot;
+      wrap.style.cssText = "display:flex;align-items:center;justify-content:center;line-height:1;font-size:" + (/lg/.test(cls || "") ? "72px" : "44px");
+      return wrap;
+    }
     wrap.innerHTML =
       '<svg viewBox="0 0 120 120" width="100%" height="100%" role="img" aria-label="Älgot the moose">' +
       '<g fill="#a9743f">' +
@@ -80,7 +89,8 @@
   /* ================================================ ONBOARDING =========== */
   function viewWelcome() {
     chrome(false);
-    var flags = I18N.langList().map(function (l) { return l.flag; }).join(" ") + " → 🇸🇪";
+    var tgt = I18N.targets[I18N.L2];
+    var flags = I18N.langList().map(function (l) { return l.flag; }).join(" ") + " → " + (tgt ? tgt.flag : "🌍");
     var scr = U.el("div", { class: "onboard onboard--center fadein" }, [
       U.el("div", { class: "onboard__flags", text: flags }),
       moose("mascot--lg"),

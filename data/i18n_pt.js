@@ -79,7 +79,7 @@
 
   var t = function (t, note) { return { t: t, note: note || "" }; };
 
-  I.registerContent("pt", {
+  I.registerContent("pt", "sv", {
     vocab: {
       // Unit 1
       hej: t("olá", "A saudação para qualquer altura do dia."),

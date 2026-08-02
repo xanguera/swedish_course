@@ -59,7 +59,9 @@ docs/
 - [x] Write `docs/README.md` — 2-step how-to, inputs/outputs, gates, PT→CA pointer
 - [x] (Apply) Step 1 for PT→CA: fill `docs/profiles/ca/L2_ca_language_profile.md` + `docs/profiles/ca/pt-ca_contrastive_profile.md`
 - [x] (Intermediate) Multilingual engine — see `plan/multilingual_engine.md` (field `sv→l2`, per-target data, parametrized audio/TTS). Done & verified.
-- [ ] (Apply) Step 2 for PT→CA: author `data/*.js` (`ca` course), `registerTarget("ca")`, verify, audio, test
+- [x] (Apply) Step 2 for PT→CA: authored `data/*_ca.js` (`ca` course) + PT/EN packs, `registerTarget("ca")`,
+      content+UI target-namespacing; verify 0 errors for sv+ca. See `plan/learn_catalan.md`.
+      (Remaining: browser eyeball, native PT/CA review, `ca-ES` audio recordings.)
 
 ## Non-goals
 
