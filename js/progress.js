@@ -4,7 +4,6 @@
 (function () {
   "use strict";
   var U = LSV.util;
-  var KEY = "lsv:v1";
 
   var DEFAULT = {
     version: 1,
@@ -15,9 +14,13 @@
     srs: {}          // vocabId -> { box: 0-5, seen: n }
   };
 
+  /* Progress is per learner profile (see profiles.js) — each profile gets
+     its own storage key, so switching profiles switches progress too. */
+  function key() { return LSV.profiles.progressKey(); }
+
   function load() {
     try {
-      var raw = localStorage.getItem(KEY);
+      var raw = localStorage.getItem(key());
       if (!raw) return JSON.parse(JSON.stringify(DEFAULT));
       var s = JSON.parse(raw);
       // shallow-merge defaults for forward-compat
@@ -31,7 +34,7 @@
   var state = load();
 
   function save() {
-    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+    try { localStorage.setItem(key(), JSON.stringify(state)); } catch (e) {}
   }
 
   /* --- lesson ordering / gating ------------------------------------- */
@@ -123,7 +126,10 @@
     },
     seenVocabIds: function () { return Object.keys(state.srs); },
 
-    reset: function () { state = JSON.parse(JSON.stringify(DEFAULT)); save(); }
+    reset: function () { state = JSON.parse(JSON.stringify(DEFAULT)); save(); },
+
+    /* Re-read state from storage — call after switching the active profile. */
+    reload: function () { state = load(); }
   };
 
   LSV.progress = P;

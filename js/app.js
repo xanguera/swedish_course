@@ -57,13 +57,39 @@
   /* ------------------------------------------------ Chrome / stats */
   function chrome(show) { topbar.hidden = !show; tabbar.hidden = !show; }
 
+  /* Per-browser-session "who's playing" gate. The active profile persists in
+     localStorage, but each new browser session must re-pick (or create) a
+     learner before the app opens — tracked in sessionStorage (cleared when the
+     tab/session ends). Falls back to an in-memory flag where storage is absent. */
+  var SESSION_KEY = "lsv:session";
+  var _sessionId = null;
+  function getSessionId() {
+    if (_sessionId) return _sessionId;
+    try { _sessionId = sessionStorage.getItem(SESSION_KEY) || null; } catch (e) {}
+    return _sessionId;
+  }
+  function setSessionId(id) {
+    _sessionId = id;
+    try { sessionStorage.setItem(SESSION_KEY, id); } catch (e) {}
+  }
+  function sessionReady() {
+    var id = getSessionId();
+    return !!(id && LSV.profiles.get(id));
+  }
+
   function localizeChrome() {
     [["learn", "tab_learn"], ["practice", "tab_practice"], ["culture", "tab_culture"], ["phrasebook", "tab_phrases"]]
       .forEach(function (p) {
         var el = U.qs('.tab[data-tab="' + p[0] + '"] .tab__label');
         if (el) el.textContent = I18N.t(p[1]);
       });
-    var lb = U.qs("#lang-btn"); if (lb) lb.textContent = I18N.currentFlag();
+    var ab = U.qs("#profile-btn");
+    if (ab) {
+      var ap = LSV.profiles.active();
+      var apName = (ap && ap.name) || "";
+      ab.textContent = LSV.profiles.initials(apName);
+      ab.setAttribute("aria-label", apName ? I18N.t("settings_title") + " — " + apName : I18N.t("settings_title"));
+    }
     // Chrome that depends on the active target (L2).
     var tg = I18N.targets[I18N.L2] || {};
     var brand = U.qs(".topbar__moose"); if (brand) brand.textContent = tg.mascot || "🫎";
@@ -147,20 +173,10 @@
     return group;
   }
 
-  function viewSetup() {
-    chrome(false);
-    var chosenL1 = I18N.L1 || "en";
-    var chosenL2 = I18N.L2 || "sv";
-    var onboarded = I18N.isOnboarded();
-
-    var head = U.el("div", { class: "setup-head" }, [
-      U.el("h1", { text: onboarded ? I18N.t("settings_title") : I18N.t("setup_title") })
-    ]);
-    if (onboarded) {
-      var x = U.el("button", { class: "setup-close", text: "✕", "aria-label": I18N.t("setup_close") });
-      x.addEventListener("click", function () { location.hash = "#/"; });
-      head.appendChild(x);
-    }
+  /* Reusable L1 + L2 (target) pickers. Returns the two group elements plus
+     getters for the currently chosen codes. */
+  function buildLangPicker(initialL1, initialL2) {
+    var chosenL1 = initialL1, chosenL2 = initialL2;
 
     var l1group = U.el("div", { class: "setup-group" }, [U.el("div", { class: "setup-group__label", text: I18N.t("setup_l1") })]);
     I18N.langList().forEach(function (lang) {
@@ -199,36 +215,179 @@
     });
     l2group.appendChild(U.el("div", { class: "muted", text: I18N.t("setup_l2_note") }));
 
+    return { l1group: l1group, l2group: l2group, getL1: function () { return chosenL1; }, getL2: function () { return chosenL2; } };
+  }
+
+  function nameInputGroup(initialName) {
+    var group = U.el("div", { class: "setup-group" }, [U.el("div", { class: "setup-group__label", text: I18N.t("setup_name") })]);
+    var input = U.el("input", { class: "text-input", type: "text", maxlength: "30", placeholder: I18N.t("setup_name_placeholder") });
+    input.value = initialName || "";
+    group.appendChild(input);
+    return { group: group, input: input };
+  }
+
+  /* Name + language pair form — used for the very first onboarding and for
+     adding a new family member's profile later on. */
+  function viewProfileForm(isNew) {
+    chrome(false);
+    var head = U.el("div", { class: "setup-head" }, [
+      U.el("h1", { text: I18N.t(isNew ? "profile_add_title" : "setup_title") })
+    ]);
+    if (isNew) {
+      var x = U.el("button", { class: "setup-close", text: "✕", "aria-label": I18N.t("setup_close") });
+      // Close returns to Settings when already in a session, or to the
+      // session profile-picker when adding a user from the picker gate.
+      x.addEventListener("click", function () { location.hash = sessionReady() ? "#/setup" : "#/"; });
+      head.appendChild(x);
+    }
+
+    var name = nameInputGroup("");
+    var picker = buildLangPicker(I18N.L1 || "en", I18N.L2 || "sv");
+
     var confirm = U.el("button", { class: "btn", text: I18N.t("setup_btn") });
     confirm.addEventListener("click", function () {
-      I18N.completeOnboarding(chosenL1, chosenL2);
+      var n = name.input.value.trim();
+      if (!n) { name.input.classList.add("text-input--error"); name.input.focus(); return; }
+      I18N.completeOnboarding(n, picker.getL1(), picker.getL2());
+      setSessionId(LSV.profiles.activeId());
       applyTarget();
+      P.reload();
+      localizeChrome();
+      if (isNew) toast(I18N.t("toast_profile_switched", { name: n }));
+      if (location.hash === "#/" || location.hash === "") render();
+      else location.hash = "#/";
+    });
+
+    var scr = U.el("div", { class: "onboard fadein" }, [
+      head, name.group, picker.l1group, picker.l2group,
+      U.el("div", { class: "onboard__footer" }, [confirm])
+    ]);
+    U.clear(view).appendChild(scr);
+    window.scrollTo(0, 0);
+  }
+
+  /* Settings screen for an already-onboarded device: switch between family
+     members' profiles, rename the current one, tweak its language pair. */
+  function viewSettings() {
+    chrome(false);
+    var activeId = LSV.profiles.activeId();
+    var activeProfile = LSV.profiles.active();
+
+    var head = U.el("div", { class: "setup-head" }, [U.el("h1", { text: I18N.t("settings_title") })]);
+    var x = U.el("button", { class: "setup-close", text: "✕", "aria-label": I18N.t("setup_close") });
+    x.addEventListener("click", function () { location.hash = "#/"; });
+    head.appendChild(x);
+
+    function switchTo(id, name) {
+      I18N.switchProfile(id);
+      setSessionId(id);
+      applyTarget();
+      P.reload();
+      localizeChrome();
+      toast(I18N.t("toast_profile_switched", { name: name || I18N.t("profile_unnamed") }));
+      if (location.hash === "#/" || location.hash === "") render();
+      else location.hash = "#/";
+    }
+
+    var profGroup = U.el("div", { class: "setup-group" }, [U.el("div", { class: "setup-group__label", text: I18N.t("profile_section_label") })]);
+    LSV.profiles.list().forEach(function (p) {
+      var isActive = p.id === activeId;
+      var displayName = p.name || I18N.t("profile_unnamed");
+      var row = U.el("button", { class: "profile-row" + (isActive ? " is-active" : ""), type: "button" }, [
+        U.el("div", { class: "profile-row__avatar", text: LSV.profiles.initials(p.name) }),
+        U.el("div", { class: "profile-row__name", text: displayName }),
+        U.el("span", { class: "profile-row__check", text: isActive ? "✓" : "" })
+      ]);
+      if (isActive) row.disabled = true;
+      else row.addEventListener("click", function () { switchTo(p.id, p.name); });
+      profGroup.appendChild(row);
+    });
+    var addBtn = U.el("button", { class: "btn btn--blue btn--sm btn--auto", text: I18N.t("profile_add_btn") });
+    addBtn.addEventListener("click", function () { location.hash = "#/setup/new"; });
+    profGroup.appendChild(addBtn);
+
+    var name = nameInputGroup(activeProfile ? activeProfile.name : "");
+    name.input.addEventListener("change", function () {
+      LSV.profiles.update(activeId, { name: name.input.value.trim() });
+      localizeChrome();
+    });
+
+    var picker = buildLangPicker(I18N.L1 || "en", I18N.L2 || "sv");
+
+    var confirm = U.el("button", { class: "btn", text: I18N.t("settings_save_btn") });
+    confirm.addEventListener("click", function () {
+      LSV.profiles.update(activeId, { name: name.input.value.trim() });
+      I18N.setL1(picker.getL1());
+      I18N.setL2(picker.getL2());
+      applyTarget();
+      P.reload();
       localizeChrome();
       if (location.hash === "#/" || location.hash === "") render();
       else location.hash = "#/";
     });
 
-    var groups = [head, l1group, l2group];
-    if (onboarded) groups.push(viewOfflineGroup());
-    groups.push(U.el("div", { class: "onboard__footer" }, [confirm]));
+    var scr = U.el("div", { class: "onboard fadein" }, [
+      head, profGroup, name.group, picker.l1group, picker.l2group, viewOfflineGroup(),
+      U.el("div", { class: "onboard__footer" }, [confirm])
+    ]);
 
-    var scr = U.el("div", { class: "onboard fadein" }, groups);
+    var resetBtn = U.el("button", { class: "btn btn--red btn--sm", text: I18N.t("settings_reset_btn") });
+    resetBtn.addEventListener("click", function () {
+      if (!window.confirm(I18N.t("settings_reset_confirm"))) return;
+      P.reset();
+      toast(I18N.t("settings_reset_done"));
+      location.hash = "#/";
+    });
+    scr.appendChild(U.el("div", { class: "setup-danger" }, [
+      U.el("div", { class: "setup-danger__label", text: I18N.t("settings_reset_title") }),
+      U.el("div", { class: "setup-danger__desc", text: I18N.t("settings_reset_desc") }),
+      resetBtn
+    ]));
 
-    if (onboarded) {
-      var resetBtn = U.el("button", { class: "btn btn--red btn--sm", text: I18N.t("settings_reset_btn") });
-      resetBtn.addEventListener("click", function () {
-        if (!window.confirm(I18N.t("settings_reset_confirm"))) return;
-        P.reset();
-        toast(I18N.t("settings_reset_done"));
-        location.hash = "#/";
-      });
-      scr.appendChild(U.el("div", { class: "setup-danger" }, [
-        U.el("div", { class: "setup-danger__label", text: I18N.t("settings_reset_title") }),
-        U.el("div", { class: "setup-danger__desc", text: I18N.t("settings_reset_desc") }),
-        resetBtn
-      ]));
-    }
+    U.clear(view).appendChild(scr);
+    window.scrollTo(0, 0);
+  }
 
+  function viewSetup() {
+    if (!I18N.isOnboarded()) return viewProfileForm(false);
+    if (location.hash === "#/setup/new") return viewProfileForm(true);
+    return viewSettings();
+  }
+
+  /* Adopt a profile for this browser session, then open the app. */
+  function selectProfile(id) {
+    I18N.switchProfile(id);
+    setSessionId(id);
+    applyTarget();
+    P.reload();
+    localizeChrome();
+    if (location.hash === "#/" || location.hash === "") render();
+    else location.hash = "#/";
+  }
+
+  /* Session gate shown when profiles already exist but this browser session
+     hasn't picked one yet: choose an existing learner or create a new one. */
+  function viewProfilePicker() {
+    chrome(false);
+    var head = U.el("div", { class: "setup-head" }, [U.el("h1", { text: I18N.t("picker_title") })]);
+
+    var list = U.el("div", { class: "setup-group" }, [U.el("div", { class: "setup-group__label", text: I18N.t("picker_choose") })]);
+    LSV.profiles.list().forEach(function (p) {
+      var row = U.el("button", { class: "profile-row", type: "button" }, [
+        U.el("div", { class: "profile-row__avatar", text: LSV.profiles.initials(p.name) }),
+        U.el("div", { class: "profile-row__name", text: p.name || I18N.t("profile_unnamed") }),
+        U.el("span", { class: "profile-row__go", text: "›" })
+      ]);
+      row.addEventListener("click", function () { selectProfile(p.id); });
+      list.appendChild(row);
+    });
+
+    var addBtn = U.el("button", { class: "btn btn--blue", text: I18N.t("picker_add_btn") });
+    addBtn.addEventListener("click", function () { location.hash = "#/setup/new"; });
+
+    var scr = U.el("div", { class: "onboard fadein" }, [
+      head, list, U.el("div", { class: "onboard__footer" }, [addBtn])
+    ]);
     U.clear(view).appendChild(scr);
     window.scrollTo(0, 0);
   }
@@ -592,10 +751,18 @@
     var hash = location.hash || "#/";
 
     if (!I18N.isOnboarded()) {
-      if (hash === "#/setup") return viewSetup();
+      if (hash === "#/setup" || hash === "#/setup/new") return viewSetup();
       return viewWelcome();
     }
-    if (hash === "#/setup") return viewSetup();
+
+    // Profiles exist, but a fresh browser session must pick (or create) a
+    // learner before the app opens.
+    if (!sessionReady()) {
+      if (hash === "#/setup/new") return viewProfileForm(true);
+      return viewProfilePicker();
+    }
+
+    if (hash === "#/setup" || hash === "#/setup/new") return viewSetup();
 
     P.setRoute(hash);
     if (hash.indexOf("#/lesson/") === 0) {

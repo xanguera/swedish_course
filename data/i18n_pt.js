@@ -53,6 +53,8 @@
     welcome_sub: "Aprende um pouco de sueco para uma viagem em família a Estocolmo — palavras, frases e curiosidades, um pequeno passo de cada vez.",
     welcome_btn: "Começar",
     setup_title: "Configura o teu curso",
+    setup_name: "O teu nome",
+    setup_name_placeholder: "ex.: Alex",
     setup_l1: "Eu falo",
     setup_l2: "Quero aprender",
     setup_l2_note: "Mais idiomas em breve",
@@ -60,11 +62,24 @@
     setup_close: "Fechar",
 
     settings_title: "Definições",
+    settings_save_btn: "Guardar",
     settings_reset_title: "Zona de perigo",
     settings_reset_desc: "Apaga todas as tuas lições, XP, sequência e palavras guardadas. Não é possível desfazer.",
     settings_reset_btn: "Repor todo o progresso",
     settings_reset_confirm: "Repor todo o progresso? Isto apaga para sempre as tuas lições, XP, sequência e palavras guardadas.",
     settings_reset_done: "Progresso reposto",
+
+    // perfis de aprendiz (vários membros da família por dispositivo)
+    profile_section_label: "Membros da família neste dispositivo",
+    profile_unnamed: "Sem nome",
+    profile_add_btn: "+ Adicionar familiar",
+    profile_add_title: "Adicionar um familiar",
+    toast_profile_switched: "Mudou para {name}",
+
+    // seletor de perfil da sessão ("quem está a jogar")
+    picker_title: "Quem está a aprender?",
+    picker_choose: "Escolhe o teu perfil",
+    picker_add_btn: "+ Novo utilizador",
 
     // offline
     offline_title: "Offline",

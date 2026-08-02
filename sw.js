@@ -5,7 +5,7 @@
    for full offline readiness ahead of a trip. */
 "use strict";
 
-var CACHE_VERSION = "lsv-v3";
+var CACHE_VERSION = "lsv-v4";
 var STATIC_CACHE = CACHE_VERSION + "-static";
 var RUNTIME_CACHE = CACHE_VERSION + "-runtime";
 
@@ -15,6 +15,7 @@ var APP_SHELL = [
   "manifest.json",
   "css/styles.css",
   "js/util.js",
+  "js/profiles.js",
   "js/i18n.js",
   "js/coredata.js",
   "js/audio.js",
