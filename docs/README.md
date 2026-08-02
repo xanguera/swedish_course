@@ -26,11 +26,30 @@ tongue for an existing L2* skips straight to a translation pack (see "Adding ano
 
 ---
 
+## Drive it with an LLM (the fast path)
+
+You don't have to run the steps by hand. `prompts/new_language_pair.md` is a ready-to-paste prompt that
+drives the **entire** job in a Claude Code session — brief → profiles → course → packs → verify → audio
+→ test — pausing at checkpoints for your confirmation.
+
+1. Open a fresh Claude Code session **at the repo root**.
+2. Paste the contents of the `PROMPT` block in `docs/prompts/new_language_pair.md`.
+3. Answer the Phase-0 brief questions (L1, L2, destination, scope, variants, mascot). The assistant then
+   writes the profiles (pause for your review), authors the course + packs, verifies, generates audio,
+   and helps you test.
+
+Use it for a brand-new pair *or* for adding a new mother tongue to an existing course (it detects the
+cheap path automatically). The prompt is just an operator wrapper around the same docs below — read them
+if you want to understand or intervene.
+
+---
+
 ## Files in this folder
 
 | Path | Role | When it's written |
 |---|---|---|
 | `README.md` | This orchestrator | — |
+| `prompts/new_language_pair.md` | **Paste-into-Claude prompt** that drives all phases | — |
 | `curricula_creation_process.md` | Detailed reference / rationale / Swedish example | — |
 | `rules/curriculum_rules.md` | **Generic, language-independent pedagogy + schema** (Step 2 input) | once, stable |
 | `templates/L2_language_profile.template.md` | Template for the L2 profile | once, stable |
