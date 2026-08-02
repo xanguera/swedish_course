@@ -29,10 +29,13 @@ from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parent.parent
 DEFAULT_MANIFEST = PROJECT / "assets" / "audio" / "manifest.json"
-DEFAULT_OUT = PROJECT / "assets" / "audio" / "sv"
 
-# A short Swedish sentence used to build the reference voice with macOS `say`.
-SAY_REF_TEXT = "Hej och välkommen! Nu ska vi lära oss lite svenska tillsammans."
+# Per-language macOS `say` reference voice + a short sentence, used to auto-build a
+# consistent reference clip to clone. Add an entry when you add a target language.
+SAY_REF = {
+    "sv": ("Alva", "Hej och välkommen! Nu ska vi lära oss lite svenska tillsammans."),
+    "ca": ("Montse", "Hola i benvinguts! Ara aprendrem una mica de català junts."),
+}
 
 
 def log(msg):
@@ -42,15 +45,16 @@ def log(msg):
 def parse_args():
     p = argparse.ArgumentParser(description="Generate Swedish audio with OmniVoice.")
     p.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
-    p.add_argument("--out-dir", type=Path, default=DEFAULT_OUT)
+    p.add_argument("--target", default=None, help="Only clips for this target code (e.g. sv, ca); also sets out-dir/language/voice defaults.")
+    p.add_argument("--out-dir", type=Path, default=None, help="Output folder (default: assets/audio/<target>).")
     p.add_argument("--model", default="k2-fsa/OmniVoice")
-    p.add_argument("--language", default="sv", help="Target language (name or code). Default: sv (Swedish).")
+    p.add_argument("--language", default=None, help="Language name or code passed to OmniVoice (default: the target code).")
     p.add_argument("--device", default=None, help="cpu / mps / cuda:0 (default: auto-detect).")
     p.add_argument("--ref-audio", type=Path, default=None, help="Reference audio for voice cloning.")
     p.add_argument("--ref-text", default=None, help="Transcript of --ref-audio (else auto-ASR).")
     p.add_argument("--instruct", default=None, help="Voice-design attributes, e.g. 'female, medium pitch'.")
     p.add_argument("--no-say-ref", action="store_true", help="Don't auto-build a reference with macOS `say`.")
-    p.add_argument("--say-voice", default="Alva", help="macOS Swedish voice for the auto reference (Alva).")
+    p.add_argument("--say-voice", default=None, help="macOS voice for the auto reference (default: per-language, see SAY_REF).")
     p.add_argument("--num-step", type=int, default=32, help="Diffusion steps (16 = faster, 32 = better).")
     p.add_argument("--speed", type=float, default=0.95, help="Speaking rate (<1 slower; good for learners).")
     p.add_argument("--format", choices=["mp3", "wav"], default="mp3")
@@ -68,14 +72,14 @@ def existing(out_dir: Path, clip_id: str):
     return None
 
 
-def make_say_reference(voice: str, tmpdir: Path):
-    """Create a Swedish reference clip with macOS `say`; return (wav_path, text) or None."""
-    if not shutil.which("say"):
+def make_say_reference(voice: str, text: str, tmpdir: Path):
+    """Create a reference clip with macOS `say`; return (wav_path, text) or None."""
+    if not shutil.which("say") or not voice or not text:
         return None
     aiff = tmpdir / "ref.aiff"
     wav = tmpdir / "ref.wav"
     try:
-        subprocess.run(["say", "-v", voice, "-o", str(aiff), SAY_REF_TEXT], check=True)
+        subprocess.run(["say", "-v", voice, "-o", str(aiff), text], check=True)
     except (subprocess.CalledProcessError, FileNotFoundError):
         return None
     # Convert AIFF → WAV. Prefer ffmpeg; fall back to soundfile.
@@ -85,7 +89,7 @@ def make_say_reference(voice: str, tmpdir: Path):
         import soundfile as sf
         data, sr = sf.read(str(aiff))
         sf.write(str(wav), data, sr)
-    return (wav, SAY_REF_TEXT)
+    return (wav, text)
 
 
 def to_mp3(wav_path: Path, mp3_path: Path):
@@ -102,21 +106,34 @@ def main():
     if not args.manifest.exists():
         log(f"❌ Manifest not found: {args.manifest}\n   Run: node scripts/build_manifest.js")
         sys.exit(1)
+
+    # Resolve target-aware settings (target sets the language, folder and voice).
+    target = args.target
+    language = args.language or target or "sv"
+    out_dir = args.out_dir or (PROJECT / "assets" / "audio" / (target or language))
+    ref_voice, ref_say_text = SAY_REF.get(language, (None, None))
+    say_voice = args.say_voice or ref_voice
+
     manifest = json.loads(args.manifest.read_text())
-    args.out_dir.mkdir(parents=True, exist_ok=True)
+    if target:
+        manifest = [e for e in manifest if e.get("target") == target]
+        if not manifest:
+            log(f"❌ No clips for target '{target}' in the manifest. Run: node scripts/build_manifest.js")
+            sys.exit(1)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     # 1) Which clips are missing?
-    missing = [e for e in manifest if args.force or not existing(args.out_dir, e["id"])]
+    missing = [e for e in manifest if args.force or not existing(out_dir, e["id"])]
     if args.limit > 0:
         missing = missing[: args.limit]
 
     total = len(manifest)
-    present = sum(1 for e in manifest if existing(args.out_dir, e["id"]))
-    log(f"Manifest: {total} clips · already on disk: {present}")
+    present = sum(1 for e in manifest if existing(out_dir, e["id"]))
+    log(f"Manifest: {total} clips ({language}) · already on disk: {present}")
     if not missing:
         log("✓ Nothing to do — every clip already exists. (Use --force to regenerate.)")
         return
-    log(f"To generate: {len(missing)} clip(s) → {args.out_dir}")
+    log(f"To generate: {len(missing)} clip(s) → {out_dir}")
 
     if args.dry_run:
         for e in missing:
@@ -145,17 +162,17 @@ def main():
         tmp = Path(td)
 
         # 3) Decide the voice and build a reusable prompt if cloning.
-        gen_common = {"language": args.language, "num_step": args.num_step, "speed": args.speed}
+        gen_common = {"language": language, "num_step": args.num_step, "speed": args.speed}
         clone_prompt = None
         ref_audio = ref_text = instruct = None
 
         if args.ref_audio:
             log(f"Voice: cloning from {args.ref_audio}")
             clone_prompt = model.create_voice_clone_prompt(ref_audio=str(args.ref_audio), ref_text=args.ref_text)
-        elif not args.no_say_ref and not args.instruct:
-            ref = make_say_reference(args.say_voice, tmp)
+        elif not args.no_say_ref and not args.instruct and say_voice and ref_say_text:
+            ref = make_say_reference(say_voice, ref_say_text, tmp)
             if ref:
-                log(f"Voice: cloning a Swedish reference made with macOS `say -v {args.say_voice}`")
+                log(f"Voice: cloning a {language} reference made with macOS `say -v {say_voice}`")
                 clone_prompt = model.create_voice_clone_prompt(ref_audio=str(ref[0]), ref_text=ref[1])
         if clone_prompt is None:
             if args.instruct:
@@ -178,16 +195,16 @@ def main():
                 wav_tmp = tmp / (cid + ".wav")
                 sf.write(str(wav_tmp), audio[0], model.sampling_rate)
                 if want_mp3:
-                    to_mp3(wav_tmp, args.out_dir / (cid + ".mp3"))
+                    to_mp3(wav_tmp, out_dir / (cid + ".mp3"))
                 else:
-                    shutil.move(str(wav_tmp), str(args.out_dir / (cid + ".wav")))
+                    shutil.move(str(wav_tmp), str(out_dir / (cid + ".wav")))
                 ok += 1
                 log(f"  [{i}/{len(missing)}] ✓ {cid}  «{text}»")
             except Exception as ex:  # keep going on a single failure
                 fail += 1
                 log(f"  [{i}/{len(missing)}] ✗ {cid}: {ex}")
 
-    log(f"\nDone. Generated {ok} clip(s)" + (f", {fail} failed" if fail else "") + f" in {args.out_dir}")
+    log(f"\nDone. Generated {ok} clip(s)" + (f", {fail} failed" if fail else "") + f" in {out_dir}")
     log("Reload the site — the 🔊 buttons now use your OmniVoice recordings.")
     if fail:
         sys.exit(1)
